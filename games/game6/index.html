@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Gokuldham Adventures 3D</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #87CEEB; /* Sky Blue */
+            font-family: 'Roboto', sans-serif;
+            touch-action: none; /* Prevent scroll on mobile */
+        }
+
+        #game-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* UI Overlay */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* HUD */
+        #hud {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            pointer-events: auto;
+        }
+
+        .hud-panel {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            font-family: 'Fredoka One', cursive;
+            letter-spacing: 1px;
+        }
+
+        #score-display { font-size: 1.2rem; color: #FFD700; }
+        #mission-display { font-size: 1rem; color: #fff; margin-top: 10px; max-width: 300px; }
+        
+        #pov-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+
+        /* Controls */
+        #controls-area {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            pointer-events: auto;
+            width: 150px;
+            height: 150px;
+            display: none; 
+        }
+
+        #joystick-base {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        #joystick-knob {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        #action-buttons {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            pointer-events: auto;
+            display: flex;
+            gap: 15px;
+        }
+
+        .game-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 0 #ccc, 0 5px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        .game-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #ccc, 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        #jump-btn { background: #4CAF50; color: white; }
+        #interact-btn { background: #2196F3; color: white; }
+        #pov-btn { background: #9C27B0; color: white; }
+
+        /* Dialog Box */
+        #dialog-box {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            display: none;
+            pointer-events: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 4px solid #333;
+            z-index: 100;
+        }
+
+        #dialog-speaker {
+            font-weight: 900;
+            color: #d32f2f;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+
+        #dialog-text {
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        #dialog-next {
+            float: right;
+            margin-top: 10px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        /* Start Screen */
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            color: #FFD700;
+            text-shadow: 4px 4px 0px #d32f2f;
+            margin-bottom: 10px;
+        }
+
+        .start-btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: #ff5e62;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            font-family: 'Fredoka One', cursive;
+            margin-top: 20px;
+        }
+
+        .start-btn:hover { transform: scale(1.05); background: #ff4044; }
+        
+        #fullscreen-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: 1px solid white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 0.8rem;
+            pointer-events: auto;
+        }
+
+        /* Loading Bar */
+        #loading-bar-container {
+            width: 300px;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        #loading-bar {
+            width: 0%;
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.2s;
+        }
+
+        /* How to Play Screen */
+        #how-to-play {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 998;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .instructions-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .instruction-section {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .instruction-title {
+            font-family: 'Fredoka One', cursive;
+            color: #FFD700;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .instruction-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .instruction-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .instruction-text {
+            flex: 1;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Mobile Controls */
+        #mobile-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+        }
+
+        #left-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 150px;
+            height: 150px;
+            pointer-events: auto;
+        }
+
+        #right-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            pointer-events: auto;
+        }
+
+        /* Minimap */
+        #minimap {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
+            height: 120px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            border: 2px solid white;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+        }
+
+        /* Mobile Detection */
+        @media (max-width: 768px) {
+            #mobile-controls {
+                display: block;
+            }
+            #minimap {
+                display: block;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            .instructions-container {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+
+    </style>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <h1>GOKULDHAM<br>ADVENTURES</h1>
+        <p>Jethalal's Morning Hustle</p>
+        <div id="loading-bar-container"><div id="loading-bar"></div></div>
+        <div class="control-buttons">
+            <button class="start-btn" id="btn-how-to-play">HOW TO PLAY</button>
+            <button class="start-btn" id="btn-start" style="display:none;">PLAY GAME</button>
+        </div>
+    </div>
+
+    <!-- How to Play Screen -->
+    <div id="how-to-play">
+        <h1>HOW TO PLAY</h1>
+        <div class="instructions-container">
+            <div class="instruction-section">
+                <div class="instruction-title">🎯 OBJECTIVE</div>
+                <p>Help Jethalal find 5 Fafda plates scattered around Gokuldham Society. Talk to neighbors for hints!</p>
+            </div>
+            
+            <div class="instruction-section">
+                <div class="instruction-title">🎮 CONTROLS</div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-icon">🕹️</div>
+                    <div class="instruction-text">
+                        <strong>Virtual Joystick</strong><br>
+                        Move Jethalal around the society
+                    </div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-icon">⬆️</div>
+                    <div class="instruction-text">
+                        <strong>Jump Button</strong><br>
+                        Make Jethalal jump over obstacles
+                    </div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-icon">✋</div>
+                    <div class="instruction-text">
+                        <strong>Interact Button</strong><br>
+                        Talk to neighbors or collect items when nearby
+                    </div>
+                </div>
+                
+                <div class="instruction-item">
+                    <div class="instruction-icon">👁️</div>
+                    <div class="instruction-text">
+                        <strong>View Button</strong><br>
+                        Switch between 1st person and 3rd person views
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instruction-section">
+                <div class="instruction-title">💡 TIPS</div>
+                <ul style="text-align: left; padding-left: 20px;">
+                    <li>Look for golden Fafda plates glowing and rotating</li>
+                    <li>Approach characters to see the Interact button light up</li>
+                    <li>Check all corners of the society</li>
+                    <li>Use first-person view for better visibility in tight spaces</li>
+                </ul>
+            </div>
+        </div>
+        <div class="control-buttons">
+            <button class="start-btn" id="btn-back">BACK</button>
+            <button class="start-btn" id="btn-play-now">PLAY NOW</button>
+        </div>
+    </div>
+
+    <button id="fullscreen-btn">⛶ Fullscreen</button>
+
+    <div id="game-container"></div>
+
+    <!-- Mobile Controls -->
+    <div id="mobile-controls">
+        <div id="left-controls">
+            <div id="joystick-base">
+                <div id="joystick-knob"></div>
+            </div>
+        </div>
+        <div id="right-controls">
+            <button id="pov-btn" class="game-btn">👁</button>
+            <button id="interact-btn" class="game-btn">✋</button>
+            <button id="jump-btn" class="game-btn">⬆</button>
+        </div>
+    </div>
+
+    <div id="ui-layer">
+        <div id="hud">
+            <div class="hud-panel">
+                <div id="score-display">Fafda: 0/5</div>
+                <div id="mission-display">Current Task: Find Daya!</div>
+            </div>
+        </div>
+        
+        <div id="pov-indicator">3rd Person View</div>
+
+        <div id="dialog-box">
+            <div id="dialog-speaker">Speaker Name</div>
+            <div id="dialog-text">Dialog goes here...</div>
+            <button id="dialog-next">Next ></button>
+        </div>
+    </div>
+
+    <div id="minimap"></div>
+
+<script>
+/**
+ * GOKULDHAM ADVENTURES - CORE ENGINE
+ * * This script handles:
+ * 1. Three.js Scene Setup (Lights, Camera, Renderer)
+ * 2. Procedural World Generation (Gokuldham Society buildings)
+ * 3. Character System (Roblox-style mesh generation for Jethalal, Daya, etc.)
+ * 4. Physics/Collisions (AABB logic)
+ * 5. Input Handling (Touch Joystick + Keyboard)
+ * 6. Game Logic (Dialogs, Missions, Collectibles)
+ */
+
+class Game {
+    constructor() {
+        this.container = document.getElementById('game-container');
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x87CEEB);
+        this.scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
+
+        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.container.appendChild(this.renderer.domElement);
+
+        // Game State
+        this.clock = new THREE.Clock();
+        this.mixers = []; // Animation mixers
+        this.collidables = []; // Walls/Buildings
+        this.interactables = []; // NPCs/Items
+        this.collectedItems = 0;
+        this.isDialogActive = false;
+        this.povMode = 'third'; // 'third' or 'first'
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Player State
+        this.player = null;
+        this.playerVelocity = new THREE.Vector3();
+        this.playerDirection = new THREE.Vector3();
+        this.playerOnGround = false;
+        this.canJump = false;
+        
+        // Input State
+        this.keys = { w: false, a: false, s: false, d: false, space: false, c: false };
+        this.joystick = { x: 0, y: 0, active: false };
+
+        this.init();
+    }
+
+    init() {
+        this.setupLights();
+        this.createGround();
+        this.buildGokuldham(); // Procedural Building Gen
+        this.createPlayer();
+        this.spawnNPCs();
+        this.spawnCollectibles();
+        
+        this.setupInputs();
+        this.setupUI();
+        
+        // Handle loading
+        const bar = document.getElementById('loading-bar');
+        const btn = document.getElementById('btn-start');
+        bar.style.width = '100%';
+        setTimeout(() => {
+            document.getElementById('loading-bar-container').style.display = 'none';
+            btn.style.display = 'block';
+        }, 500);
+
+        window.addEventListener('resize', () => this.onWindowResize(), false);
+    }
+
+    start() {
+        this.animate();
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    setupLights() {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        this.scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(50, 100, 50);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        dirLight.shadow.camera.near = 0.5;
+        dirLight.shadow.camera.far = 200;
+        dirLight.shadow.camera.left = -50;
+        dirLight.shadow.camera.right = 50;
+        dirLight.shadow.camera.top = 50;
+        dirLight.shadow.camera.bottom = -50;
+        this.scene.add(dirLight);
+    }
+
+    createGround() {
+        // Main Courtyard
+        const geometry = new THREE.PlaneGeometry(200, 200);
+        const material = new THREE.MeshStandardMaterial({ 
+            color: 0x90EE90, // Light Green grass/tiles
+            roughness: 0.8 
+        });
+        const ground = new THREE.Mesh(geometry, material);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        this.scene.add(ground);
+
+        // Tiled Path area (Center)
+        const pathGeo = new THREE.PlaneGeometry(80, 80);
+        const pathMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.9 });
+        const path = new THREE.Mesh(pathGeo, pathMat);
+        path.rotation.x = -Math.PI / 2;
+        path.position.y = 0.05;
+        path.receiveShadow = true;
+        this.scene.add(path);
+    }
+
+    // --- PROCEDURAL GENERATION ---
+
+    buildGokuldham() {
+        // Helper to create a building block
+        const createBuilding = (x, z, width, depth, height, color, name) => {
+            const geo = new THREE.BoxGeometry(width, height, depth);
+            const mat = new THREE.MeshStandardMaterial({ color: color });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(x, height / 2, z);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.name = name;
+            this.scene.add(mesh);
+            
+            // Add bounding box for collision
+            const bbox = new THREE.Box3().setFromObject(mesh);
+            this.collidables.push({
+                box: bbox,
+                mesh: mesh
+            });
+
+            // Windows
+            const winGeo = new THREE.BoxGeometry(1.5, 2, 0.2);
+            const winMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+            
+            // Logic to place windows based on size
+            for(let fy = 5; fy < height; fy += 8) {
+                // Front face windows
+                for(let fx = -width/2 + 4; fx < width/2; fx += 8) {
+                   const win = new THREE.Mesh(winGeo, winMat);
+                   win.position.set(x + fx, fy, z + depth/2 + 0.1);
+                   this.scene.add(win);
+                }
+            }
+        };
+
+        // Building colors
+        const colors = {
+            A: 0xFFDAB9, // Peach
+            B: 0xFFA07A, // Light Salmon
+            C: 0x87CEFA, // Light Sky Blue
+            Gate: 0x708090 // Slate Gray
+        };
+
+        // Layout: U-Shape
+        // Back Wing (Wing A & B)
+        createBuilding(0, -50, 100, 20, 30, colors.A, "Wing A");
+        
+        // Left Wing
+        createBuilding(-50, 0, 20, 80, 30, colors.B, "Wing B");
+
+        // Right Wing
+        createBuilding(50, 0, 20, 80, 30, colors.C, "Wing C");
+
+        // Main Gate (Arched structure simplified)
+        createBuilding(0, 50, 40, 5, 15, colors.Gate, "Gate");
+        
+        // Temple (Small structure in corner)
+        createBuilding(30, 30, 10, 10, 8, 0xFFFFFF, "Temple");
+        
+        // Add a "Gokuldham" Sign
+        this.createSign(0, 58, 50, "GOKULDHAM");
+    }
+
+    createSign(x, y, z, text) {
+        // Simple placeholder for sign using blocks
+        const board = new THREE.Mesh(
+            new THREE.BoxGeometry(20, 4, 1),
+            new THREE.MeshStandardMaterial({ color: 0x8B4513 })
+        );
+        board.position.set(x, y, z);
+        this.scene.add(board);
+    }
+
+    // --- CHARACTER SYSTEM (ROBLOX STYLE) ---
+
+    createCharacterMesh(skinColor, shirtColor, pantColor, type = 'male', name) {
+        const group = new THREE.Group();
+        group.name = name;
+
+        // Materials
+        const skinMat = new THREE.MeshStandardMaterial({ color: skinColor });
+        const shirtMat = new THREE.MeshStandardMaterial({ color: shirtColor });
+        const pantMat = new THREE.MeshStandardMaterial({ color: pantColor });
+
+        // Head
+        const headGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+        const head = new THREE.Mesh(headGeo, skinMat);
+        head.position.y = 4.75;
+        group.add(head);
+
+        // Body
+        const bodyGeo = new THREE.BoxGeometry(3, 3, 1.5);
+        const body = new THREE.Mesh(bodyGeo, shirtMat);
+        body.position.y = 2.5;
+        group.add(body);
+
+        // Arms (Pivoted at shoulder)
+        const armGeo = new THREE.BoxGeometry(1, 3, 1);
+        
+        const leftArm = new THREE.Mesh(armGeo, skinMat);
+        leftArm.position.set(-2, 2.5, 0);
+        leftArm.geometry.translate(0, -1, 0); // Pivot at top
+        group.add(leftArm);
+
+        const rightArm = new THREE.Mesh(armGeo, skinMat);
+        rightArm.position.set(2, 2.5, 0);
+        rightArm.geometry.translate(0, -1, 0); // Pivot at top
+        group.add(rightArm);
+
+        // Legs
+        const legGeo = new THREE.BoxGeometry(1.4, 3, 1.4);
+        
+        const leftLeg = new THREE.Mesh(legGeo, pantMat);
+        leftLeg.position.set(-0.75, 1.5, 0);
+        leftLeg.geometry.translate(0, -1.5, 0); // Pivot at top
+        group.add(leftLeg);
+
+        const rightLeg = new THREE.Mesh(legGeo, pantMat);
+        rightLeg.position.set(0.75, 1.5, 0);
+        rightLeg.geometry.translate(0, -1.5, 0); // Pivot at top
+        group.add(rightLeg);
+
+        // Mustaches / Hair details (simple blocks)
+        const hair = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.4, 1.7), new THREE.MeshStandardMaterial({color:0x000000}));
+        hair.position.set(0, 6.0, 0);
+        group.add(hair);
+
+        if(type === 'male') {
+            const stache = new THREE.Mesh(new THREE.BoxGeometry(1, 0.2, 0.1), new THREE.MeshStandardMaterial({color:0x000000}));
+            stache.position.set(0, 4.8, 0.8); // Front of face
+            group.add(stache);
+        } else {
+            // Saree for Daya
+            const saree = new THREE.Mesh(new THREE.BoxGeometry(3.2, 4, 1.6), new THREE.MeshStandardMaterial({color:0xFF0000}));
+            saree.position.set(0, 2, 0);
+            group.add(saree);
+        }
+
+        group.traverse(o => { if(o.isMesh) o.castShadow = true; });
+
+        return { 
+            mesh: group, 
+            leftArm, 
+            rightArm, 
+            leftLeg, 
+            rightLeg,
+            head
+        };
+    }
+
+    createPlayer() {
+        // Jethalal: Peach skin, Printed Shirt (Simulated with Color), Grey pants
+        const rig = this.createCharacterMesh(0xFFDAB9, 0xFF4500, 0x808080, 'male', 'Jethalal');
+        this.player = rig.mesh;
+        this.playerRig = rig;
+        
+        this.player.position.set(0, 0, 40); // Start near gate
+        this.scene.add(this.player);
+
+        // Player collision box
+        this.playerCollider = new THREE.Box3().setFromObject(this.player);
+        
+        // Camera Follower setup
+        this.cameraOffset = new THREE.Vector3(0, 10, 15);
+        this.updateCamera();
+    }
+
+    spawnNPCs() {
+        // Factory for NPCs
+        const addNPC = (x, z, skin, shirt, pant, name, dialogs, type='male') => {
+            const rig = this.createCharacterMesh(skin, shirt, pant, type, name);
+            rig.mesh.position.set(x, 0, z);
+            rig.mesh.rotation.y = Math.random() * Math.PI * 2;
+            this.scene.add(rig.mesh);
+            
+            this.interactables.push({
+                mesh: rig.mesh,
+                type: 'npc',
+                name: name,
+                dialogs: dialogs,
+                triggerRadius: 5
+            });
+        };
+
+        // Daya: Saree (Red/Yellow), Distinct voice
+        addNPC(-10, 0, 0xFFDAB9, 0xFF0000, 0xFFD700, "Daya", [
+            "Tapu ke papa! Did you find the Jalebi Fafda?", 
+            "Hey Maa Mataji!",
+            "Go check near the clubhouse!"
+        ], 'female');
+
+        // Bapuji: White Dhoti/Kurta
+        addNPC(10, -30, 0xFFDAB9, 0xFFFFFF, 0xFFFFFF, "Champaklal", [
+            "Jethiya! Don't be late for the shop!",
+            "Babuchak! Have you exercised today?",
+            "Where is Tapu?"
+        ]);
+
+        // Bhide: Yellow Kurta
+        addNPC(-20, 10, 0xFFDAB9, 0xFFFF00, 0x8B4513, "Bhide", [
+            "I am the Secretary of this society!",
+            "Maintain discipline!",
+            "Is the maintenance cheque ready?"
+        ]);
+        
+        // Popatlal: Umbrella man
+        addNPC(20, 20, 0xFFDAB9, 0x800080, 0x000000, "Popatlal", [
+            "Cancel! Cancel! Cancel!",
+            "Why is nobody finding a girl for me?",
+            "Have you seen the marriage bureau?"
+        ]);
+    }
+
+    spawnCollectibles() {
+        // Jalebi Fafda plates (Yellow Cylinders)
+        const geo = new THREE.CylinderGeometry(1, 1, 0.2, 16);
+        const mat = new THREE.MeshStandardMaterial({ color: 0xFFD700 }); // Gold/Yellow
+
+        const positions = [
+            {x: -40, z: -10}, {x: 40, z: -10}, 
+            {x: -40, z: 40}, {x: 40, z: 40},
+            {x: 0, z: -40}
+        ];
+
+        positions.forEach((pos, index) => {
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(pos.x, 1, pos.z);
+            mesh.rotation.x = Math.PI/6; // Tilt
+            mesh.name = `Fafda_${index}`;
+            this.scene.add(mesh);
+            
+            // Animation data
+            mesh.userData = { id: index, rotSpeed: 2 };
+
+            this.interactables.push({
+                mesh: mesh,
+                type: 'item',
+                name: 'Fafda Plate',
+                triggerRadius: 2.5
+            });
+        });
+    }
+
+    // --- INPUT HANDLING ---
+
+    setupInputs() {
+        // Keyboard
+        document.addEventListener('keydown', (e) => this.onKey(e, true));
+        document.addEventListener('keyup', (e) => this.onKey(e, false));
+
+        // Touch Joystick
+        const stickBase = document.getElementById('joystick-base');
+        const stickKnob = document.getElementById('joystick-knob');
+        let touchId = null;
+        let startX, startY;
+
+        const handleMove = (clientX, clientY) => {
+            const rect = stickBase.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            let dx = clientX - centerX;
+            let dy = clientY - centerY;
+            const distance = Math.min(Math.sqrt(dx*dx + dy*dy), 40); // Limit radius
+            const angle = Math.atan2(dy, dx);
+            
+            const moveX = Math.cos(angle) * distance;
+            const moveY = Math.sin(angle) * distance;
+            
+            stickKnob.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+            
+            // Normalize -1 to 1
+            this.joystick.x = moveX / 40;
+            this.joystick.y = moveY / 40;
+            this.joystick.active = true;
+        };
+
+        stickBase.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.changedTouches[0];
+            touchId = touch.identifier;
+            handleMove(touch.clientX, touch.clientY);
+        });
+
+        stickBase.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            for(let i=0; i<e.changedTouches.length; i++) {
+                if(e.changedTouches[i].identifier === touchId) {
+                    handleMove(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+                }
+            }
+        });
+
+        const resetJoystick = () => {
+            touchId = null;
+            this.joystick.x = 0;
+            this.joystick.y = 0;
+            this.joystick.active = false;
+            stickKnob.style.transform = `translate(-50%, -50%)`;
+        };
+
+        stickBase.addEventListener('touchend', resetJoystick);
+        stickBase.addEventListener('touchcancel', resetJoystick);
+        
+        // Buttons
+        const jumpBtn = document.getElementById('jump-btn');
+        jumpBtn.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            this.keys.space = true; 
+        });
+        jumpBtn.addEventListener('touchend', (e) => { 
+            e.preventDefault(); 
+            this.keys.space = false; 
+        });
+        jumpBtn.addEventListener('touchcancel', (e) => { 
+            e.preventDefault(); 
+            this.keys.space = false; 
+        });
+        
+        const interactBtn = document.getElementById('interact-btn');
+        interactBtn.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            this.checkInteractions(); 
+        });
+
+        const povBtn = document.getElementById('pov-btn');
+        povBtn.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            this.togglePOV(); 
+        });
+
+        // Dialog Next Button
+        document.getElementById('dialog-next').addEventListener('click', () => {
+            this.closeDialog();
+        });
+        document.getElementById('dialog-next').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.closeDialog();
+        });
+    }
+
+    onKey(event, isPressed) {
+        const key = event.key.toLowerCase();
+        if (key === 'w' || key === 'arrowup') this.keys.w = isPressed;
+        if (key === 'a' || key === 'arrowleft') this.keys.a = isPressed;
+        if (key === 's' || key === 'arrowdown') this.keys.s = isPressed;
+        if (key === 'd' || key === 'arrowright') this.keys.d = isPressed;
+        if (key === ' ') this.keys.space = isPressed;
+        if (key === 'c') {
+            if (isPressed && !this.keys.c) {
+                this.togglePOV();
+            }
+            this.keys.c = isPressed;
+        }
+        
+        if (isPressed && key === 'e') this.checkInteractions();
+    }
+
+    setupUI() {
+        document.getElementById('btn-start').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            this.start();
+        });
+        
+        document.getElementById('btn-how-to-play').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('how-to-play').style.display = 'flex';
+        });
+        
+        document.getElementById('btn-back').addEventListener('click', () => {
+            document.getElementById('how-to-play').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'flex';
+        });
+        
+        document.getElementById('btn-play-now').addEventListener('click', () => {
+            document.getElementById('how-to-play').style.display = 'none';
+            this.start();
+        });
+        
+        document.getElementById('fullscreen-btn').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        });
+
+        // Mobile-specific UI adjustments
+        if (this.isMobile) {
+            document.getElementById('interact-btn').style.display = 'flex';
+            document.getElementById('pov-btn').style.display = 'flex';
+        }
+    }
+
+    togglePOV() {
+        this.povMode = this.povMode === 'third' ? 'first' : 'third';
+        document.getElementById('pov-indicator').innerText = 
+            this.povMode === 'third' ? '3rd Person View' : '1st Person View';
+        this.updateCamera();
+    }
+
+    updateCamera() {
+        if (this.povMode === 'third') {
+            // Third person camera - behind the player
+            this.camera.position.set(
+                this.player.position.x,
+                this.player.position.y + 10,
+                this.player.position.z + 15
+            );
+            this.camera.lookAt(this.player.position);
+        } else {
+            // First person camera - at player's head level
+            this.camera.position.set(
+                this.player.position.x,
+                this.player.position.y + 5, // Eye level
+                this.player.position.z
+            );
+            // Look in the direction the player is facing
+            const lookAt = new THREE.Vector3(
+                this.player.position.x + Math.sin(this.player.rotation.y),
+                this.player.position.y + 5,
+                this.player.position.z + Math.cos(this.player.rotation.y)
+            );
+            this.camera.lookAt(lookAt);
+        }
+    }
+
+    // --- COLLISION DETECTION ---
+
+    checkCollisions(newPos) {
+        // Create a temporary bounding box at the new position
+        const tempBox = this.playerCollider.clone();
+        const delta = new THREE.Vector3().subVectors(newPos, this.player.position);
+        tempBox.translate(delta);
+        
+        // Check against all collidable objects
+        for (let obj of this.collidables) {
+            if (tempBox.intersectsBox(obj.box)) {
+                return true; // Collision detected
+            }
+        }
+        
+        return false; // No collision
+    }
+
+    // --- GAME LOGIC ---
+
+    updatePhysics(delta) {
+        if (!this.player) return;
+
+        // Input vector
+        let inputX = 0;
+        let inputZ = 0;
+
+        if (this.joystick.active) {
+            inputX = this.joystick.x;
+            inputZ = this.joystick.y;
+        } else {
+            if (this.keys.w) inputZ = -1;
+            if (this.keys.s) inputZ = 1;
+            if (this.keys.a) inputX = -1;
+            if (this.keys.d) inputX = 1;
+        }
+
+        // Camera relative movement
+        // Get camera direction (projected to XZ plane)
+        const camDir = new THREE.Vector3();
+        this.camera.getWorldDirection(camDir);
+        camDir.y = 0;
+        camDir.normalize();
+
+        const camRight = new THREE.Vector3(-camDir.z, 0, camDir.x);
+        
+        const moveDir = new THREE.Vector3();
+        moveDir.addScaledVector(camDir, -inputZ); // Forward/Back
+        moveDir.addScaledVector(camRight, inputX); // Left/Right
+
+        const speed = 20;
+        const gravity = -50;
+        
+        if (moveDir.length() > 0.1) {
+            moveDir.normalize();
+            
+            // Calculate new position
+            const newPos = this.player.position.clone();
+            newPos.addScaledVector(moveDir, speed * delta);
+            
+            // Check for collisions before moving
+            if (!this.checkCollisions(newPos)) {
+                this.player.position.copy(newPos);
+                
+                // Rotation
+                const angle = Math.atan2(moveDir.x, moveDir.z);
+                // Smooth rotation
+                const targetRot = angle;
+                const currentRot = this.player.rotation.y;
+                // Simple Lerp for rotation
+                let diff = targetRot - currentRot;
+                while (diff > Math.PI) diff -= Math.PI * 2;
+                while (diff < -Math.PI) diff += Math.PI * 2;
+                this.player.rotation.y += diff * 10 * delta;
+
+                // Animate limbs (Walking)
+                const time = this.clock.getElapsedTime() * 10;
+                this.playerRig.leftLeg.rotation.x = Math.sin(time) * 0.5;
+                this.playerRig.rightLeg.rotation.x = Math.sin(time + Math.PI) * 0.5;
+                this.playerRig.leftArm.rotation.x = Math.sin(time + Math.PI) * 0.5;
+                this.playerRig.rightArm.rotation.x = Math.sin(time) * 0.5;
+
+            } else {
+                // Collision detected - try moving in X and Z separately
+                const newPosX = this.player.position.clone();
+                newPosX.x += moveDir.x * speed * delta;
+                if (!this.checkCollisions(newPosX)) {
+                    this.player.position.x = newPosX.x;
+                }
+                
+                const newPosZ = this.player.position.clone();
+                newPosZ.z += moveDir.z * speed * delta;
+                if (!this.checkCollisions(newPosZ)) {
+                    this.player.position.z = newPosZ.z;
+                }
+            }
+        } else {
+            // Idle Pose
+            this.playerRig.leftLeg.rotation.x = 0;
+            this.playerRig.rightLeg.rotation.x = 0;
+            this.playerRig.leftArm.rotation.x = 0;
+            this.playerRig.rightArm.rotation.x = 0;
+        }
+
+        // Gravity & Jump
+        this.playerVelocity.y += gravity * delta;
+        if (this.player.position.y <= 0) {
+            this.playerVelocity.y = 0;
+            this.player.position.y = 0;
+            this.canJump = true;
+        } else {
+            this.canJump = false;
+        }
+
+        if (this.keys.space && this.canJump) {
+            this.playerVelocity.y = 20; // Jump force
+            this.canJump = false;
+        }
+
+        this.player.position.y += this.playerVelocity.y * delta;
+
+        // Boundary Check
+        if(this.player.position.x > 90) this.player.position.x = 90;
+        if(this.player.position.x < -90) this.player.position.x = -90;
+        if(this.player.position.z > 90) this.player.position.z = 90;
+        if(this.player.position.z < -90) this.player.position.z = -90;
+
+        // Update player collision box
+        this.playerCollider.setFromObject(this.player);
+
+        // Update camera
+        this.updateCamera();
+
+        // Update interaction button visibility
+        this.checkProximity();
+    }
+
+    checkProximity() {
+        if (!this.player) return;
+        let near = false;
+        const pPos = this.player.position;
+
+        this.interactables.forEach(obj => {
+            if (obj.mesh.visible && pPos.distanceTo(obj.mesh.position) < obj.triggerRadius) {
+                near = true;
+            }
+        });
+
+        const btn = document.getElementById('interact-btn');
+        if(near) {
+            btn.style.background = '#FFD700'; // Highlight
+        } else {
+            btn.style.background = '#2196F3';
+        }
+    }
+
+    checkInteractions() {
+        if(this.isDialogActive) return;
+
+        const pPos = this.player.position;
+        let interacted = false;
+
+        // Filter valid targets
+        this.interactables.forEach((obj, index) => {
+            if (obj.mesh.visible && pPos.distanceTo(obj.mesh.position) < obj.triggerRadius) {
+                
+                if (obj.type === 'item') {
+                    // Collect Item
+                    this.collectItem(index);
+                    interacted = true;
+                } else if (obj.type === 'npc') {
+                    // Talk to NPC
+                    this.showDialog(obj.name, obj.dialogs);
+                    interacted = true;
+                }
+            }
+        });
+    }
+
+    collectItem(index) {
+        const item = this.interactables[index];
+        item.mesh.visible = false;
+        
+        // Sound effect (Synthesized)
+        this.playBeep(600, 0.1);
+        this.playBeep(800, 0.1, 0.1);
+
+        this.collectedItems++;
+        document.getElementById('score-display').innerText = `Fafda: ${this.collectedItems}/5`;
+        
+        if(this.collectedItems === 5) {
+            document.getElementById('mission-display').innerText = "Mission: Return to Bapuji!";
+            document.getElementById('mission-display').style.color = "#00FF00";
+        }
+    }
+
+    showDialog(name, lines) {
+        this.isDialogActive = true;
+        const box = document.getElementById('dialog-box');
+        const text = document.getElementById('dialog-text');
+        const speaker = document.getElementById('dialog-speaker');
+        
+        box.style.display = 'block';
+        speaker.innerText = name;
+        
+        // Pick random line
+        const line = lines[Math.floor(Math.random() * lines.length)];
+        text.innerText = line;
+
+        // Text to Speech
+        this.speak(line, name);
+    }
+
+    closeDialog() {
+        document.getElementById('dialog-box').style.display = 'none';
+        this.isDialogActive = false;
+        window.speechSynthesis.cancel();
+    }
+
+    // --- AUDIO SYSTEM ---
+
+    playBeep(freq, dur, delay=0) {
+        if(!this.audioContext) return;
+        const osc = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(this.audioContext.destination);
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.1, this.audioContext.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + delay + dur);
+        osc.start(this.audioContext.currentTime + delay);
+        osc.stop(this.audioContext.currentTime + delay + dur);
+    }
+
+    speak(text, charName) {
+        if (!'speechSynthesis' in window) return;
+        
+        window.speechSynthesis.cancel(); // Stop previous
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Attempt to find voices
+        const voices = window.speechSynthesis.getVoices();
+        
+        // Simple voice assignment logic
+        if (charName === 'Daya') {
+            utterance.pitch = 1.5; // High pitch
+            utterance.rate = 1.1;
+        } else if (charName === 'Bapuji') {
+            utterance.pitch = 0.8; // Old man
+            utterance.rate = 0.9;
+        } else {
+            utterance.pitch = 1.0;
+        }
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // --- MAIN LOOP ---
+
+    onWindowResize() {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        
+        const delta = this.clock.getDelta();
+        
+        if (!this.isDialogActive) {
+            this.updatePhysics(delta);
+        }
+
+        // Rotate collectibles
+        this.interactables.forEach(obj => {
+            if(obj.type === 'item' && obj.mesh.visible) {
+                obj.mesh.rotation.y += delta;
+                obj.mesh.position.y = 1 + Math.sin(this.clock.getElapsedTime() * 2) * 0.2;
+            }
+        });
+
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+// Start Game Instance
+window.onload = () => {
+    const game = new Game();
+};
+
+</script>
+</body>
+</html>

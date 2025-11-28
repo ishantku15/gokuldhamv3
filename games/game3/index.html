@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stop the Sundar!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Modak&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background-color: #87CEEB;
+            touch-action: none;
+            user-select: none;
+        }
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            pointer-events: none;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .hud-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 10px 20px;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.2);
+            border: 3px solid #333;
+        }
+        .money-counter {
+            font-family: 'Modak', cursive;
+            color: #2ecc71;
+            font-size: 28px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .score-counter {
+            font-weight: bold;
+            color: #e67e22;
+            font-size: 20px;
+        }
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            pointer-events: auto;
+            backdrop-filter: blur(8px);
+            transition: opacity 0.3s;
+        }
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .title-text {
+            font-family: 'Modak', cursive;
+            font-size: 60px;
+            color: #FFD700;
+            -webkit-text-stroke: 2px #8B4513;
+            text-align: center;
+            line-height: 1;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .btn-primary {
+            background: #e74c3c;
+            color: white;
+            border: 4px solid white;
+            padding: 15px 40px;
+            font-size: 24px;
+            font-family: 'Modak', cursive;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #c0392b;
+            transition: transform 0.1s;
+            margin-top: 20px;
+        }
+        .btn-primary:active {
+            transform: translateY(5px);
+            box-shadow: 0 5px 0 #c0392b;
+        }
+        .instruction-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 3px solid #333;
+        }
+        .character-preview {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        .char-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .char-emoji {
+            font-size: 40px;
+        }
+        .char-desc {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .hit-popup {
+            position: absolute;
+            font-weight: bold;
+            font-size: 24px;
+            pointer-events: none;
+            animation: floatUp 1s forwards;
+            text-shadow: 2px 2px 0 #000;
+            z-index: 20;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- HUD -->
+    <div class="ui-overlay">
+        <div class="hud-bar">
+            <div class="score-counter">Hits: <span id="hitsEl">0</span></div>
+            <div class="money-counter">₹<span id="moneyEl">10000</span></div>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="screen">
+        <div class="title-text">Stop the<br>Sundar!</div>
+        
+        <div class="instruction-box">
+            <p class="mb-2 text-lg"><b>Jethalal's Wallet is in danger!</b></p>
+            <p class="text-sm text-gray-600 mb-4">Tap windows to interact.</p>
+            
+            <div class="character-preview">
+                <div class="char-item">
+                    <span class="char-emoji">👨🏻</span>
+                    <span class="char-desc text-green-600">TAP HIM!<br>(Sundar)</span>
+                </div>
+                <div class="char-item">
+                    <span class="char-emoji">👴🏻</span>
+                    <span class="char-desc text-red-600">DON'T TAP!<br>(Bapuji)</span>
+                </div>
+            </div>
+        </div>
+        
+        <button id="startBtn" class="btn-primary">Start Game</button>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="endScreen" class="screen hidden">
+        <div class="title-text" style="color: #e74c3c;">Wallet Empty!</div>
+        <div class="bg-white p-6 rounded-xl border-4 border-black text-center mb-6">
+            <p class="text-xl mb-2">Sundar took all the money!</p>
+            <p class="text-3xl font-bold text-blue-600">Score: <span id="finalScore">0</span></p>
+        </div>
+        <button id="restartBtn" class="btn-primary">Try Again</button>
+    </div>
+
+<script>
+/**
+ * TMKOC Game 2: "Stop the Sundar"
+ * Whack-a-Mole Style Arcade Game
+ */
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// --- Configuration ---
+const GAME_CONFIG = {
+    cols: 3,
+    rows: 3,
+    bgColors: ['#FFC0CB', '#F0E68C', '#ADD8E6'], // Building Colors
+    initialSpeed: 2000, // ms
+    minSpeed: 600,
+    startMoney: 10000,
+    taxiFare: 500
+};
+
+// --- Assets Management ---
+const sundarImg = new Image();
+sundarImg.src = 'sundar.png'; 
+// Helper to track if image failed to load (so we can fallback to emoji)
+sundarImg.failed = false;
+sundarImg.onerror = () => { sundarImg.failed = true; };
+
+const bapujiImg = new Image();
+bapujiImg.src = 'bapuji.png';
+bapujiImg.failed = false;
+bapujiImg.onerror = () => { bapujiImg.failed = true; };
+
+// --- State ---
+let gameState = {
+    active: false,
+    money: GAME_CONFIG.startMoney,
+    hits: 0,
+    windows: [], // Array of window objects
+    lastTime: 0,
+    spawnTimer: 0,
+    spawnInterval: GAME_CONFIG.initialSpeed,
+    particles: []
+};
+
+// --- Audio System ---
+const AudioSys = {
+    synth: window.speechSynthesis,
+    playSound: function(type) {
+        if (!window.AudioContext) return;
+        const actx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.connect(gain);
+        gain.connect(actx.destination);
+
+        if (type === 'hit') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(400, actx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, actx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, actx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, actx.currentTime + 0.1);
+            osc.start();
+            osc.stop(actx.currentTime + 0.1);
+        } else if (type === 'bad') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, actx.currentTime);
+            osc.frequency.linearRampToValueAtTime(100, actx.currentTime + 0.3);
+            gain.gain.setValueAtTime(0.2, actx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, actx.currentTime + 0.3);
+            osc.start();
+            osc.stop(actx.currentTime + 0.3);
+        } else if (type === 'money_loss') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, actx.currentTime);
+            osc.frequency.linearRampToValueAtTime(400, actx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.1, actx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, actx.currentTime + 0.2);
+            osc.start();
+            osc.stop(actx.currentTime + 0.2);
+        }
+    },
+    speak: function(text, character) {
+        if (this.synth.speaking) this.synth.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        
+        // Voices logic
+        const voices = this.synth.getVoices();
+        const inVoice = voices.find(v => v.lang.includes('IN')) || voices[0];
+        if(inVoice) utter.voice = inVoice;
+
+        if (character === 'Sundar') { utter.pitch = 1.5; utter.rate = 1.3; }
+        else if (character === 'Bapuji') { utter.pitch = 0.5; utter.rate = 0.8; }
+        else { utter.pitch = 1.0; utter.rate = 1.0; } // Jethalal
+
+        this.synth.speak(utter);
+    }
+};
+
+// --- Classes ---
+
+class Particle {
+    constructor(x, y, type) {
+        this.x = x;
+        this.y = y;
+        this.type = type; // 'coin', 'star'
+        this.vx = (Math.random() - 0.5) * 10;
+        this.vy = (Math.random() - 0.5) * 10;
+        this.gravity = 0.5;
+        this.life = 1.0;
+        this.text = type === 'coin' ? '💸' : '⭐';
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += this.gravity;
+        this.life -= 0.02;
+    }
+
+    draw(ctx) {
+        ctx.globalAlpha = this.life;
+        ctx.font = "24px Arial";
+        ctx.fillText(this.text, this.x, this.y);
+        ctx.globalAlpha = 1.0;
+    }
+}
+
+class WindowEntity {
+    constructor(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        
+        // State
+        this.state = 'empty'; // empty, rising, active, hiding, hit
+        this.character = null; // 'sundar', 'bapuji'
+        this.animProgress = 0; // 0 to 1 (height of popup)
+        this.timer = 0;
+    }
+
+    spawn(type) {
+        if (this.state !== 'empty') return;
+        this.character = type;
+        this.state = 'rising';
+        this.animProgress = 0;
+        
+        if(type === 'sundar') AudioSys.playSound('spawn'); 
+    }
+
+    hit() {
+        if (this.state !== 'active' && this.state !== 'rising') return false;
+        
+        this.state = 'hit';
+        this.timer = 0;
+        return this.character;
+    }
+
+    update(dt) {
+        const speed = 0.05 + (gameState.hits * 0.001); // Get faster
+
+        if (this.state === 'rising') {
+            this.animProgress += speed;
+            if (this.animProgress >= 1) {
+                this.animProgress = 1;
+                this.state = 'active';
+                this.timer = 2000 - (gameState.hits * 10); // Stay time decreases
+                if (this.timer < 600) this.timer = 600;
+            }
+        } else if (this.state === 'active') {
+            this.timer -= dt * 60; // rough frame adjustment
+            if (this.timer <= 0) {
+                this.state = 'hiding';
+                // If Sundar hides without being hit, lose money
+                if (this.character === 'sundar') {
+                    gameState.money -= GAME_CONFIG.taxiFare;
+                    updateHUD();
+                    createFloatingText(this.x + this.width/2, this.y, "-₹500", "red");
+                    AudioSys.speak("Taxi ka bhada do!", "Sundar");
+                    AudioSys.playSound('money_loss');
+                    
+                    // Check loss
+                    if(gameState.money <= 0) gameOver();
+                }
+            }
+        } else if (this.state === 'hiding') {
+            this.animProgress -= speed;
+            if (this.animProgress <= 0) {
+                this.animProgress = 0;
+                this.state = 'empty';
+                this.character = null;
+            }
+        } else if (this.state === 'hit') {
+            this.timer++;
+            if (this.timer > 10) { // Show hit face for 10 frames then hide
+                this.state = 'hiding';
+            }
+        }
+    }
+
+    draw(ctx) {
+        // 1. Draw Window Frame Background (Inside)
+        ctx.fillStyle = '#2c3e50';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        // 2. Clip for Character
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(this.x, this.y, this.width, this.height);
+        ctx.clip();
+
+        // 3. Draw Character
+        if (this.character) {
+            const charY = this.y + this.height - (this.height * 0.8 * this.animProgress);
+            const cx = this.x + this.width / 2;
+            
+            // IMAGE DRAWING LOGIC WITH FALLBACK
+            let img = this.character === 'sundar' ? sundarImg : bapujiImg;
+            let useImage = img.complete && img.naturalHeight !== 0 && !img.failed;
+
+            if (useImage) {
+                // Draw PNG
+                const imgSize = this.width * 0.9; // 90% of window width
+                // Center image
+                const imgX = cx - imgSize / 2;
+                // Position Y so bottom of image is near the bottom of the window opening
+                const imgY = (charY + this.height * 0.2) - imgSize;
+                
+                ctx.drawImage(img, imgX, imgY, imgSize, imgSize);
+
+                // Visual indicator for 'Hit' state on image (flash red)
+                if (this.state === 'hit') {
+                    ctx.globalCompositeOperation = 'source-atop';
+                    ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+                    ctx.fillRect(imgX, imgY, imgSize, imgSize);
+                    ctx.globalCompositeOperation = 'source-over';
+                }
+
+            } else {
+                // Fallback to Emoji
+                let emoji = '';
+                if (this.character === 'sundar') {
+                    emoji = this.state === 'hit' ? '🤕' : '👨🏻';
+                } else {
+                    emoji = this.state === 'hit' ? '😡' : '👴🏻';
+                }
+
+                // Draw Body
+                ctx.font = `${this.width * 0.6}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(emoji, cx, charY + this.height * 0.2);
+            }
+
+            // Accessories (Taxi icon for Sundar)
+            if (this.character === 'sundar' && this.state !== 'hit') {
+                ctx.font = `${this.width * 0.3}px Arial`;
+                ctx.fillText('🚕', cx + 30, charY);
+            }
+        }
+        ctx.restore();
+
+        // 4. Draw Window Frame (Foreground) and Shutters
+        ctx.strokeStyle = '#8B4513';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        
+        // Window Sill
+        ctx.fillStyle = '#A0522D';
+        ctx.fillRect(this.x - 5, this.y + this.height, this.width + 10, 10);
+        
+        // Top arch
+        ctx.fillStyle = '#e74c3c'; // Awning
+        ctx.beginPath();
+        ctx.moveTo(this.x - 5, this.y);
+        ctx.lineTo(this.x + this.width/2, this.y - 20);
+        ctx.lineTo(this.x + this.width + 5, this.y);
+        ctx.fill();
+    }
+}
+
+// --- Core Game Logic ---
+
+function initGame() {
+    resize();
+    
+    // Create Grid of Windows
+    gameState.windows = [];
+    const margin = 20;
+    const wWidth = (canvas.width - (margin * (GAME_CONFIG.cols + 1))) / GAME_CONFIG.cols;
+    // Limit window height for aesthetics
+    const wHeight = Math.min(wWidth * 1.2, canvas.height / 4.5);
+    const startY = canvas.height * 0.25; // Start below sky/roof
+
+    for (let r = 0; r < GAME_CONFIG.rows; r++) {
+        for (let c = 0; c < GAME_CONFIG.cols; c++) {
+            const x = margin + (c * (wWidth + margin));
+            const y = startY + (r * (wHeight + margin));
+            gameState.windows.push(new WindowEntity(x, y, wWidth, wHeight));
+        }
+    }
+    
+    gameState.money = GAME_CONFIG.startMoney;
+    gameState.hits = 0;
+    gameState.spawnInterval = GAME_CONFIG.initialSpeed;
+    gameState.active = true;
+    gameState.particles = [];
+    
+    updateHUD();
+    gameLoop(0);
+}
+
+function gameLoop(timestamp) {
+    if (!gameState.active) return;
+    
+    const dt = (timestamp - gameState.lastTime) / 1000;
+    gameState.lastTime = timestamp;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw Background Building
+    ctx.fillStyle = '#FFC0CB'; // Pinkish walls
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Roof
+    ctx.fillStyle = '#d35400';
+    ctx.fillRect(0, 0, canvas.width, canvas.height * 0.2);
+    ctx.fillStyle = '#e67e22';
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height * 0.2);
+    for(let i=0; i<canvas.width; i+=40) {
+        ctx.lineTo(i+20, canvas.height * 0.2 + 10);
+        ctx.lineTo(i+40, canvas.height * 0.2);
+    }
+    ctx.fill();
+
+    // Update Spawn Logic
+    gameState.spawnTimer += (timestamp - (gameState.lastTime || timestamp)) || 16;
+    if (gameState.spawnTimer > gameState.spawnInterval) {
+        gameState.spawnTimer = 0;
+        trySpawn();
+        // Decrease interval
+        gameState.spawnInterval = Math.max(GAME_CONFIG.minSpeed, GAME_CONFIG.initialSpeed - (gameState.hits * 50));
+    }
+
+    // Update & Draw Windows
+    gameState.windows.forEach(win => {
+        win.update(dt);
+        win.draw(ctx);
+    });
+
+    // Update & Draw Particles
+    gameState.particles.forEach((p, i) => {
+        p.update();
+        p.draw(ctx);
+        if (p.life <= 0) gameState.particles.splice(i, 1);
+    });
+
+    requestAnimationFrame(gameLoop);
+}
+
+function trySpawn() {
+    // Find empty windows
+    const emptyWins = gameState.windows.filter(w => w.state === 'empty');
+    if (emptyWins.length === 0) return;
+
+    const win = emptyWins[Math.floor(Math.random() * emptyWins.length)];
+    
+    // 20% chance for Bapuji, 80% Sundar
+    const type = Math.random() < 0.2 ? 'bapuji' : 'sundar';
+    win.spawn(type);
+}
+
+function handleClick(e) {
+    if (!gameState.active) return;
+
+    const rect = canvas.getBoundingClientRect();
+    // Support touch or mouse
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+    gameState.windows.forEach(win => {
+        // Simple AABB collision
+        if (x > win.x && x < win.x + win.width && y > win.y && y < win.y + win.height) {
+            const hitType = win.hit();
+            if (hitType) {
+                handleHit(hitType, win);
+            }
+        }
+    });
+}
+
+function handleHit(type, win) {
+    const cx = win.x + win.width/2;
+    const cy = win.y + win.height/2;
+
+    if (type === 'sundar') {
+        // Good hit
+        gameState.hits++;
+        createParticles(cx, cy, 'star');
+        AudioSys.playSound('hit');
+        AudioSys.speak(randomPick(["Ae Sundar!", "Chup kar!", "Paisa nahi hai!"]), "Jethalal");
+        createFloatingText(cx, cy, "GOTCHA!", "#2ecc71");
+        
+    } else if (type === 'bapuji') {
+        // Bad hit
+        gameState.money -= 1000; // Big penalty
+        createParticles(cx, cy, 'coin'); // Money flying away
+        AudioSys.playSound('bad');
+        AudioSys.speak("Babuchak! Jethiya!", "Bapuji");
+        createFloatingText(cx, cy, "-₹1000", "#c0392b");
+        
+        if(gameState.money <= 0) gameOver();
+    }
+    updateHUD();
+}
+
+function createParticles(x, y, type) {
+    for (let i = 0; i < 8; i++) {
+        gameState.particles.push(new Particle(x, y, type));
+    }
+}
+
+function createFloatingText(x, y, text, color) {
+    const el = document.createElement('div');
+    el.className = 'hit-popup';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.color = color;
+    el.innerText = text;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+}
+
+function updateHUD() {
+    document.getElementById('moneyEl').innerText = gameState.money;
+    document.getElementById('hitsEl').innerText = gameState.hits;
+}
+
+function gameOver() {
+    gameState.active = false;
+    document.getElementById('endScreen').classList.remove('hidden');
+    document.getElementById('finalScore').innerText = gameState.hits;
+    AudioSys.speak("Hey Maa Mataji! Pura paisa gaya!", "Daya");
+}
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+function randomPick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// --- Event Listeners ---
+window.addEventListener('resize', () => {
+    resize();
+    // Re-calc window positions if resize happens mid-game? 
+    // For simplicity in this prototype, we just let it be or restart.
+});
+
+canvas.addEventListener('mousedown', handleClick);
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevent zoom/scroll
+    handleClick(e);
+}, {passive: false});
+
+document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('startScreen').classList.add('hidden');
+    AudioSys.speak("Chalo shuru karte hain!", "Jethalal");
+    initGame();
+});
+
+document.getElementById('restartBtn').addEventListener('click', () => {
+    document.getElementById('endScreen').classList.add('hidden');
+    initGame();
+});
+
+</script>
+</body>
+</html>

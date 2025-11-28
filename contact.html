@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Contact Us | Gokuldham.fun - Get in Touch</title>
+    
+    <meta name="description" content="Contact Gokuldham.fun team. Send feedback, suggestions, or report issues. We'd love to hear from fellow TMKOC fans!">
+    
+    <meta name="keywords" content="contact Gokuldham.fun, TMKOC fan feedback, website suggestions, report issues">
+    
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Ishant Webworks">
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="canonical" href="https://gokuldham.fun/contact.html">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFBEB;
+            background-image: radial-gradient(#FCD34D 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .comic-font {
+            font-family: 'Comic Neue', cursive;
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-press { transition: all 0.1s ease; }
+        .btn-press:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .menu-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        .menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        /* Footer Styles */
+        .footer-links a {
+            transition: all 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #FCD34D;
+            transform: translateX(5px);
+        }
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.2);
+        }
+    </style>
+</head>
+<body class="text-gray-800 selection:bg-yellow-300 selection:text-yellow-900">
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay fixed inset-0 bg-black bg-opacity-70 z-40"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white z-50 shadow-2xl overflow-y-auto">
+        <div class="p-4 flex justify-between items-center border-b border-gray-200">
+            <span class="text-lg font-bold text-red-600">Menu</span>
+            <button id="closeMenuBtn" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-4">
+                <li><a href="index.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Home</a></li>
+                <li><a href="about.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">About Us</a></li>
+                <li><a href="https://store.gokuldham.fun/" target="_blank" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Store</a></li>
+                <li><a href="contact.html" class="block py-2 px-4 bg-yellow-100 rounded-lg text-yellow-800 font-medium">Contact</a></li>
+                <li><a href="index.html#games" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Games</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav class="bg-yellow-400 border-b-4 border-yellow-600 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="index.html" class="bg-white p-1 rounded-lg border-2 border-black shadow-sm block">
+                        <img 
+                            src="logo.png" 
+                            alt="Gokuldham Fun Website Logo" 
+                            class="h-8 md:h-12 w-auto object-contain"
+                            width="48"
+                            height="48"
+                            onerror="this.src='https://upload.wikimedia.org/wikipedia/en/c/c7/Taarak_Mehta_Ka_Ooltah_Chashmah_Logo.png'"
+                        >
+                    </a>
+                    <span class="text-lg md:text-2xl font-extrabold tracking-tight text-red-600 comic-font leading-tight">Gokuldham<span class="text-blue-600">.fun</span></span>
+                </div>
+                
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex space-x-4 font-bold text-yellow-900">
+                        <a href="index.html" class="hover:text-white transition">Home</a>
+                        <a href="about.html" class="hover:text-white transition">About Us</a>
+                        <a href="https://store.gokuldham.fun/" target="_blank" class="hover:text-white transition">Store</a>
+                        <a href="contact.html" class="hover:text-white transition border-b-2 border-yellow-800">Contact</a>
+                        <a href="index.html#games" class="hover:text-white transition">Games</a>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="menuBtn" class="md:hidden text-yellow-900 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8 animate-fade-in-up">
+        <div class="bg-white rounded-3xl shadow-lg p-8 md:p-12 border-4 border-yellow-200">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-8 comic-font">Contact Us</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-yellow-50 rounded-2xl p-6 border-l-4 border-yellow-500">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Get in Touch</h2>
+                    <p class="text-gray-700 mb-6">
+                        We'd love to hear from you! Whether you have feedback, suggestions, or just want to share your love for TMKOC, 
+                        feel free to reach out to us.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-envelope text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Email</h3>
+                                <p class="text-gray-600">ishant150407@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-globe text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Website</h3>
+                                <p class="text-gray-600">
+                                    <a href="https://ishant.shop" target="_blank" class="text-blue-600 hover:text-blue-800">
+                                        ishant.shop
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-green-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-clock text-green-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">Response Time</h3>
+                                <p class="text-gray-600">Usually within 24-48 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 rounded-2xl p-6 border-l-4 border-blue-500">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Send a Message</h2>
+                    <form action="https://formsubmit.co/ishant150407@gmail.com" method="POST" class="space-y-4">
+                        <input type="hidden" name="_subject" value="New Contact Form Submission - Gokuldham.fun">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_next" value="https://gokuldham.fun/thank-you.html">
+                        
+                        <div>
+                            <label for="name" class="block text-gray-700 font-medium mb-2">Your Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent" placeholder="Enter your name" required>
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div>
+                            <label for="subject" class="block text-gray-700 font-medium mb-2">Subject</label>
+                            <select id="subject" name="subject" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required>
+                                <option value="">Select a subject</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="suggestion">Suggestion</option>
+                                <option value="bug">Report a Bug</option>
+                                <option value="partnership">Partnership</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-gray-700 font-medium mb-2">Message</label>
+                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent" placeholder="Type your message here..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition btn-press">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="bg-green-50 rounded-2xl p-6 border-l-4 border-green-500">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg border border-green-200">
+                        <h3 class="font-bold text-gray-800 mb-2">Is Gokuldham.fun official?</h3>
+                        <p class="text-gray-600">
+                            No, Gokuldham.fun is an unofficial fan-made website created by a TMKOC enthusiast. 
+                            We are not affiliated with the official show or its producers.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg border border-green-200">
+                        <h3 class="font-bold text-gray-800 mb-2">Are the games free to play?</h3>
+                        <p class="text-gray-600">
+                            Yes, all games on Gokuldham.fun are completely free to play. No downloads or payments required!
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg border border-green-200">
+                        <h3 class="font-bold text-gray-800 mb-2">Can I suggest new game ideas?</h3>
+                        <p class="text-gray-600">
+                            Absolutely! We love hearing new game ideas from our community. Use the contact form above to share your suggestions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About Section -->
+                <div class="md:col-span-2">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">About Gokuldham.fun</h3>
+                    <p class="text-gray-300 mb-4">Gokuldham.fun is a fan-made tribute to the beloved Indian TV show "Taarak Mehta Ka Ooltah Chashmah". We create fun, free games inspired by the characters and stories from Gokuldham Society.</p>
+                    <p class="text-gray-300">Our mission is to bring joy to TMKOC fans through interactive entertainment while respecting the original creators and copyright holders.</p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">Quick Links</h3>
+                    <ul class="space-y-2 footer-links">
+                        <li><a href="index.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Home</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-yellow-400 transition-colors">About Us</a></li>
+                        <li><a href="https://store.gokuldham.fun/" target="_blank" class="text-gray-300 hover:text-yellow-400 transition-colors">Store</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Contact</a></li>
+                        <li><a href="index.html#games" class="text-gray-300 hover:text-yellow-400 transition-colors">Games</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact & Legal -->
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">Connect With Us</h3>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="social-icon text-gray-300 hover:text-yellow-400 text-2xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-icon text-gray-300 hover:text-yellow-400 text-2xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon text-gray-300 hover:text-yellow-400 text-2xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon text-gray-300 hover:text-yellow-400 text-2xl">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                    <div class="text-gray-300 text-sm">
+                        <p class="mb-1">Email: contact@gokuldham.fun</p>
+                        <p>Feedback: feedback@gokuldham.fun</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <div class="mb-4 text-3xl space-x-4">
+                    <span role="img" aria-label="glasses">👓</span>
+                    <span role="img" aria-label="sari">👘</span>
+                    <span role="img" aria-label="cricket">🏏</span>
+                    <span role="img" aria-label="food">🍛</span>
+                    <span role="img" aria-label="celebration">🎉</span>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        Made for fun. Not affiliated with the official show (Neela Tele Films). Just a fan tribute!
+                    </p>
+                    
+                    <div class="text-gray-400 text-sm">
+                        <p>
+                            Website created by 
+                            <a href="https://ishant.shop" target="_blank" rel="noopener" class="text-yellow-400 hover:text-yellow-300 transition-colors duration-200 font-medium">
+                                Ishant Webworks
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-gray-500 text-xs">
+                    <p>© 2023 Gokuldham.fun | All game content is inspired by TMKOC. All rights to the original show belong to Neela Tele Films.</p>
+                    <p class="mt-1">
+                        <a href="privacy.html" class="hover:text-yellow-400 transition-colors">Privacy Policy</a> | 
+                        <a href="terms.html" class="hover:text-yellow-400 transition-colors">Terms of Service</a> | 
+                        <a href="disclaimer.html" class="hover:text-yellow-400 transition-colors">Disclaimer</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- MOBILE MENU FUNCTIONALITY ---
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+        
+        menuBtn.addEventListener('click', toggleMobileMenu);
+        closeMenuBtn.addEventListener('click', toggleMobileMenu);
+        menuOverlay.addEventListener('click', toggleMobileMenu);
+        
+        // Close menu when clicking on a link
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', toggleMobileMenu);
+        });
+    </script>
+
+</body>
+</html>

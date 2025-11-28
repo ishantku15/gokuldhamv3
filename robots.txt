@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /games/
+Allow: /about.html
+Allow: /contact.html
+Allow: /privacy.html
+Allow: /terms.html
+Allow: /disclaimer.html
+
+Disallow: /admin/
+Disallow: /cgi-bin/
+Disallow: /*.php$
+Disallow: /*.js$
+Disallow: /*.css$
+
+Crawl-delay: 1
+
+Sitemap: https://gokuldham.fun/sitemap.xml

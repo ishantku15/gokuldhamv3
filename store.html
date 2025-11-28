@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Store | Gokuldham.fun - Official TMKOC Merchandise</title>
+    
+    <meta name="description" content="Official Gokuldham.fun store - Get TMKOC themed merchandise, collectibles, and fan gear. Starting with fridge magnets!">
+    
+    <meta name="keywords" content="TMKOC merchandise, Gokuldham store, Taarak Mehta products, fan gear, collectibles, fridge magnets">
+    
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Ishant Webworks">
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="canonical" href="https://gokuldham.fun/store.html">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFBEB;
+            background-image: radial-gradient(#FCD34D 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .comic-font {
+            font-family: 'Comic Neue', cursive;
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-press { transition: all 0.1s ease; }
+        .btn-press:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+        .coming-soon {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .menu-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        .menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        /* New Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes magnetGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.8); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        .animate-magnet-glow {
+            animation: magnetGlow 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="text-gray-800 selection:bg-yellow-300 selection:text-yellow-900">
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay fixed inset-0 bg-black bg-opacity-70 z-40"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white z-50 shadow-2xl overflow-y-auto">
+        <div class="p-4 flex justify-between items-center border-b border-gray-200">
+            <span class="text-lg font-bold text-red-600">Menu</span>
+            <button id="closeMenuBtn" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-4">
+                <li><a href="index.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Home</a></li>
+                <li><a href="about.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">About Us</a></li>
+                <li><a href="store.html" class="block py-2 px-4 bg-yellow-100 rounded-lg text-yellow-800 font-medium">Store</a></li>
+                <li><a href="contact.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Contact</a></li>
+                <li><a href="index.html#games" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Games</a></li>
+                <li><a href="index.html#ai-chat" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">AI Chat ✨</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav class="bg-yellow-400 border-b-4 border-yellow-600 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="index.html" class="bg-white p-1 rounded-lg border-2 border-black shadow-sm block">
+                        <img 
+                            src="logo.png" 
+                            alt="Gokuldham Fun Website Logo" 
+                            class="h-8 md:h-12 w-auto object-contain"
+                            width="48"
+                            height="48"
+                            onerror="this.src='https://upload.wikimedia.org/wikipedia/en/c/c7/Taarak_Mehta_Ka_Ooltah_Chashmah_Logo.png'"
+                        >
+                    </a>
+                    <span class="text-lg md:text-2xl font-extrabold tracking-tight text-red-600 comic-font leading-tight">Gokuldham<span class="text-blue-600">.fun</span></span>
+                </div>
+                
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex space-x-4 font-bold text-yellow-900">
+                        <a href="index.html" class="hover:text-white transition">Home</a>
+                        <a href="about.html" class="hover:text-white transition">About Us</a>
+                        <a href="store.html" class="hover:text-white transition border-b-2 border-yellow-800">Store</a>
+                        <a href="contact.html" class="hover:text-white transition">Contact</a>
+                        <a href="index.html#games" class="hover:text-white transition">Games</a>
+                        <a href="index.html#ai-chat" class="hover:text-white transition">AI Chat ✨</a>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="menuBtn" class="md:hidden text-yellow-900 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="max-w-6xl mx-auto px-4 py-12 sm:px-6 lg:px-8 animate-fade-in-up">
+        <div class="bg-white rounded-3xl shadow-lg p-8 md:p-12 border-4 border-yellow-200">
+            <div class="text-center mb-12">
+                <div class="coming-soon mb-8">
+                    <div class="text-6xl md:text-8xl text-yellow-500 mb-4 animate-float">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 comic-font">Gokuldham Store</h1>
+                </div>
+                
+                <div class="bg-yellow-50 rounded-2xl p-6 mb-8 border-l-4 border-yellow-500">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Starting with Fridge Magnets - More Coming Soon!</h2>
+                    <p class="text-gray-700 text-lg mb-6">
+                        We're starting our merchandise journey with amazing TMKOC-themed fridge magnets! 
+                        More products like apparel, mugs, and collectibles will be added soon as we grow.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Product Section -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-8 comic-font">Our First Collection</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Product 1 -->
+                    <div class="bg-white rounded-2xl shadow-md border-2 border-yellow-200 overflow-hidden product-card animate-magnet-glow">
+                        <div class="bg-yellow-100 p-6 flex justify-center">
+                            <div class="text-6xl text-red-500 animate-float">
+                                <i class="fas fa-magnet"></i>
+                            </div>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Fridge Magnets</h3>
+                            <p class="text-gray-600 mb-4">Your favorite TMKOC characters as collectible magnets</p>
+                            <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg transition btn-press animate-pulse">
+                                Coming Soon
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2 -->
+                    <div class="bg-white rounded-2xl shadow-md border-2 border-yellow-200 overflow-hidden product-card animate-magnet-glow">
+                        <div class="bg-blue-100 p-6 flex justify-center">
+                            <div class="text-6xl text-blue-500 animate-float">
+                                <i class="fas fa-magnet"></i>
+                            </div>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Fridge Magnets</h3>
+                            <p class="text-gray-600 mb-4">Your favorite TMKOC characters as collectible magnets</p>
+                            <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg transition btn-press animate-pulse">
+                                Coming Soon
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="bg-white rounded-2xl shadow-md border-2 border-yellow-200 overflow-hidden product-card animate-magnet-glow">
+                        <div class="bg-green-100 p-6 flex justify-center">
+                            <div class="text-6xl text-green-500 animate-float">
+                                <i class="fas fa-magnet"></i>
+                            </div>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Fridge Magnets</h3>
+                            <p class="text-gray-600 mb-4">Your favorite TMKOC characters as collectible magnets</p>
+                            <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg transition btn-press animate-pulse">
+                                Coming Soon
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Future Products -->
+            <div class="bg-yellow-50 rounded-2xl p-6 mb-8 border-l-4 border-yellow-500">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What's Coming Next?</h2>
+                <p class="text-gray-700 mb-6">
+                    After our fridge magnet collection launches successfully, we plan to expand with these exciting products:
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-lg border-2 border-yellow-200 text-center product-card">
+                        <div class="text-3xl text-blue-500 mb-2">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">T-Shirts</h3>
+                        <p class="text-sm text-gray-600">Character themed apparel</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-2 border-yellow-200 text-center product-card">
+                        <div class="text-3xl text-green-500 mb-2">
+                            <i class="fas fa-mug-hot"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Mugs</h3>
+                        <p class="text-sm text-gray-600">Coffee mugs with quotes</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-2 border-yellow-200 text-center product-card">
+                        <div class="text-3xl text-red-500 mb-2">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Keychains</h3>
+                        <p class="text-sm text-gray-600">Mini character keychains</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border-2 border-yellow-200 text-center product-card">
+                        <div class="text-3xl text-purple-500 mb-2">
+                            <i class="fas fa-sticky-note"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Stickers</h3>
+                        <p class="text-sm text-gray-600">Fun character stickers</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Newsletter Signup -->
+            <div class="bg-blue-50 rounded-2xl p-6 mb-8 border-l-4 border-blue-500">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Be the First to Know!</h2>
+                <p class="text-gray-700 mb-4">
+                    Sign up for our newsletter and we'll notify you as soon as our fridge magnets are available, plus get early access to future products!
+                </p>
+                
+                <form action="https://formsubmit.co/ishant150407@gmail.com" method="POST" class="max-w-md mx-auto">
+                    <input type="hidden" name="_subject" value="New Store Newsletter Signup - Gokuldham.fun">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_next" value="https://gokuldham.fun/thank-you.html">
+                    <input type="hidden" name="_autoresponse" value="Thank you for signing up for our Gokuldham.fun store newsletter! We'll notify you as soon as our TMKOC fridge magnets are available. Stay tuned for more exciting merchandise!">
+                    
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="email" name="email" placeholder="Your email address" class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required>
+                        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition btn-press">
+                            Notify Me!
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">We respect your privacy. Unsubscribe at any time.</p>
+                </form>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="bg-green-50 rounded-2xl p-6 border-l-4 border-green-500 text-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Have Product Suggestions?</h2>
+                <p class="text-gray-700 mb-4">
+                    We'd love to hear what TMKOC merchandise you'd like to see in our store!
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="contact.html" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition btn-press">
+                        Suggest Products 💡
+                    </a>
+                    <a href="index.html#games" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg transition btn-press">
+                        Play Games 🎮
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-comic text-xl mb-2 text-yellow-400">Gokuldham Society</p>
+            <p class="text-gray-500 text-sm">Made for fun. Not affiliated with the official show (Neela Tele Films). Just a fan tribute!</p>
+            <div class="mt-4 text-2xl space-x-4">
+                <span role="img" aria-label="glasses">👓</span>
+                <span role="img" aria-label="sari">👘</span>
+                <span role="img" aria-label="cricket">🏏</span>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-700">
+                <p class="text-gray-400 text-sm">
+                    Website created by 
+                    <a href="https://ishant.shop" target="_blank" rel="noopener" class="text-yellow-400 hover:text-yellow-300 transition-colors duration-200 font-medium">
+                        Ishant Webworks
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- MOBILE MENU FUNCTIONALITY ---
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+        
+        menuBtn.addEventListener('click', toggleMobileMenu);
+        closeMenuBtn.addEventListener('click', toggleMobileMenu);
+        menuOverlay.addEventListener('click', toggleMobileMenu);
+        
+        // Close menu when clicking on a link
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', toggleMobileMenu);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Gokuldham.fun | Play TMKOC Games Online</title>
+    
+    <meta name="title" content="Gokuldham.fun | Play TMKOC Games Online">
+    <meta name="description" content="Play the best free online Taarak Mehta Ka Ooltah Chashmah games! Help Jethalal run, deliver achaar with Bhide. No download required. The ultimate fan arcade.">
+    
+    <meta name="keywords" content="tmkoc game, tmkoc online game, taarak mehta ka ooltah chashmah game, gokuldham game, gokuldham online games, jethalal game, bhide game, popatlal game, tapu sena game, free tmkoc games, play tmkoc online, tmkoc arcade, gokuldham society games, indian tv show games, hindi games online, bollywood games, run jetha run game, bhide scooter game, goli jalebi game, bhide discipline master, tmkoc fan games, neela tele films games, chappal chase game, sakharam rush game, madhavi achar game, free browser games, no download games, html5 games, mobile games, fan made tmkoc games, comedy games, family games, indian character games, dayaben game, abdul game, roshen sodhi game, hathi driver game, bagha game">
+    
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Ishant Webworks">
+    <meta name="language" content="English">
+    <link rel="canonical" href="https://gokuldham.fun/">
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gokuldham.fun/">
+    <meta property="og:title" content="Play TMKOC Games Online!">
+    <meta property="og:description" content="Join the Gokuldham Society fun. Play arcade games featuring Jethalal, Bhide, and Popatlal.">
+    <meta property="og:image" content="https://gokuldham.fun/logo.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://gokuldham.fun/">
+    <meta property="twitter:title" content="Gokuldham.fun - The TMKOC Arcade">
+    <meta property="twitter:description" content="Play free TMKOC games online. Run from Bapuji and deliver pickles with Bhide!">
+    <meta property="twitter:image" content="https://gokuldham.fun/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFBEB;
+            background-image: radial-gradient(#FCD34D 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .comic-font {
+            font-family: 'Comic Neue', cursive;
+        }
+        .game-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center;
+        }
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F59E0B;
+            border-radius: 4px;
+        }
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+        }
+        /* Animations */
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(5%); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.9); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-bounce-slow { animation: bounce-slow 3s infinite; }
+        .animate-float { animation: float 5s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+        .animate-shake { animation: shake 0.8s ease-in-out; }
+        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out; }
+        .animate-spin-slow { animation: spin-slow 8s linear infinite; }
+        .animate-slide-down { animation: slideDown 0.3s ease-out; }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #F59E0B;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .btn-press { transition: all 0.1s ease; }
+        .btn-press:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+        .character-card { transition: all 0.3s ease; }
+        .character-card:hover { transform: scale(1.05) rotate(2deg); }
+        
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .menu-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        .menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Coming Soon Overlay */
+        .coming-soon-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 1rem;
+            z-index: 10;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        .coming-soon-overlay h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #FCD34D;
+        }
+        .coming-soon-overlay p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer Styles */
+        .footer-links a {
+            transition: all 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #FCD34D;
+            transform: translateX(5px);
+        }
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.2);
+        }
+        
+        /* Age Verification Modal */
+        .age-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .age-modal.active {
+            display: flex;
+        }
+        .age-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.5s ease-out;
+        }
+        .age-content h2 {
+            color: #F59E0B;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        .age-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .age-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .age-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .age-confirm {
+            background: #10B981;
+            color: white;
+            border: none;
+        }
+        .age-confirm:hover {
+            background: #059669;
+        }
+        .age-deny {
+            background: #EF4444;
+            color: white;
+            border: none;
+        }
+        .age-deny:hover {
+            background: #DC2626;
+        }
+        
+        /* Legal Dropdown */
+        .legal-dropdown {
+            position: relative;
+        }
+        .legal-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 20;
+        }
+        .legal-dropdown:hover .legal-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .legal-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #4B5563;
+            transition: all 0.2s ease;
+        }
+        .legal-menu a:hover {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+    </style>
+</head>
+<body class="text-gray-800 selection:bg-yellow-300 selection:text-yellow-900">
+
+    <!-- Age Verification Modal -->
+    <div id="ageModal" class="age-modal active">
+        <div class="age-content">
+            <h2 class="text-2xl font-bold">Age Verification Required</h2>
+            <p>This website contains games inspired by the TV show Taarak Mehta Ka Ooltah Chashmah. To access our content, please confirm that you are at least 13 years old or have parental consent.</p>
+            <p class="text-sm text-gray-600">By clicking "I'm 13 or Older", you agree to our <a href="privacy.html" class="text-blue-600 hover:underline">Privacy Policy</a> and <a href="terms.html" class="text-blue-600 hover:underline">Terms of Service</a>.</p>
+            <div class="age-buttons">
+                <button id="ageConfirm" class="age-btn age-confirm">I'm 13 or Older</button>
+                <button id="ageDeny" class="age-btn age-deny">I'm Under 13</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://ia801600.us.archive.org/12/items/TaarakMehtaKaOoltahChashmahTitleSong/Taarak%20Mehta%20Ka%20Ooltah%20Chashmah%20Title%20Song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay fixed inset-0 bg-black bg-opacity-70 z-40"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white z-50 shadow-2xl overflow-y-auto">
+        <div class="p-4 flex justify-between items-center border-b border-gray-200">
+            <span class="text-lg font-bold text-red-600">Menu</span>
+            <button id="closeMenuBtn" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-4">
+                <li><a href="index.html" class="block py-2 px-4 bg-yellow-100 rounded-lg text-yellow-800 font-medium">Home</a></li>
+                <li><a href="about.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">About Us</a></li>
+                <li><a href="blog.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Blog</a></li>
+                <li><a href="https://store.gokuldham.fun/" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Store</a></li>
+                <li><a href="contact.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Contact</a></li>
+                <li><a href="#games" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Games</a></li>
+                <li class="border-t pt-4 mt-4">
+                    <span class="block py-2 px-4 text-gray-500 font-medium">Legal</span>
+                    <ul class="pl-4 mt-2 space-y-2">
+                        <li><a href="privacy.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Terms of Service</a></li>
+                        <li><a href="disclaimer.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Disclaimer</a></li>
+                        <li><a href="copyright.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Copyright</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav class="bg-yellow-400 border-b-4 border-yellow-600 sticky top-0 z-50 shadow-lg animate-fade-in-up">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="index.html" class="bg-white p-1 rounded-lg border-2 border-black shadow-sm animate-pulse-glow block">
+                        <img 
+                            src="logo.png" 
+                            alt="Gokuldham Fun Website Logo" 
+                            class="h-8 md:h-12 w-auto object-contain"
+                            width="48"
+                            height="48"
+                            onerror="this.src='https://upload.wikimedia.org/wikipedia/en/c/c7/Taarak_Mehta_Ka_Ooltah_Chashmah_Logo.png'"
+                        >
+                    </a>
+                    <span class="text-lg md:text-2xl font-extrabold tracking-tight text-red-600 comic-font leading-tight">Gokuldham<span class="text-blue-600">.fun</span></span>
+                </div>
+                
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <button onclick="toggleMusic()" id="musicBtn" aria-label="Toggle Background Music" class="bg-yellow-600 hover:bg-yellow-700 text-white text-xs md:text-base font-bold py-1 px-3 md:py-2 md:px-4 rounded-full shadow border-b-2 border-yellow-800 transition flex items-center gap-1 md:gap-2 btn-press">
+                        <span>🔇</span> <span class="hidden md:inline">Music Off</span>
+                    </button>
+
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex space-x-4 font-bold text-yellow-900">
+                        <a href="index.html" class="hover:text-white transition">Home</a>
+                        <a href="about.html" class="hover:text-white transition">About Us</a>
+                        <a href="blog.html" class="hover:text-white transition">Blog</a>
+                        <a href="https://store.gokuldham.fun/" class="hover:text-white transition">Store</a>
+                        <a href="contact.html" class="hover:text-white transition">Contact</a>
+                        <a href="#games" class="hover:text-white transition">Games</a>
+                        <div class="legal-dropdown">
+                            <a href="#" class="hover:text-white transition flex items-center">
+                                Legal <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </a>
+                            <div class="legal-menu">
+                                <a href="privacy.html">Privacy Policy</a>
+                                <a href="terms.html">Terms of Service</a>
+                                <a href="disclaimer.html">Disclaimer</a>
+                                <a href="copyright.html">Copyright</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="menuBtn" class="md:hidden text-yellow-900 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-blue-500 text-white overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center relative z-10">
+            <div class="md:w-1/2 text-center md:text-left mb-8 md:mb-0 animate-fade-in-up">
+                <h1 class="text-3xl md:text-6xl font-extrabold mb-4 text-yellow-300 drop-shadow-md">Ooltah Chashmah, <br><span class="text-white">Seedha Fun!</span></h1>
+                <p class="text-lg md:text-xl mb-6 font-medium">Welcome to the #1 TMKOC Fan Arcade. Play games, challenge friends, and enjoy Gokuldham Society fun!</p>
+                <a href="#games" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 border-b-4 border-red-700 inline-block animate-float btn-press">
+                    Play Free Games 🎮
+                </a>
+            </div>
+            <div class="md:w-1/2 flex justify-center relative">
+                <div class="relative w-48 h-48 md:w-64 md:h-64 bg-white rounded-full flex items-center justify-center border-8 border-yellow-400 shadow-2xl animate-bounce-slow">
+                    <img src="logo.png" class="w-32 md:w-48 opacity-90" alt="Gokuldham Mascot" width="192" height="192" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/c/c7/Taarak_Mehta_Ka_Ooltah_Chashmah_Logo.png'">
+                    <div class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg animate-spin-slow">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="games" class="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 inline-block border-b-4 border-yellow-400 pb-2 animate-fade-in-up">Game Library</h2>
+            <p class="mt-4 text-lg text-gray-600">Click Play to launch games in new tabs!</p>
+        </div>
+
+        <div id="games-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <!-- Games will be loaded here dynamically from games.json -->
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About Section -->
+                <div class="md:col-span-2">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">About Gokuldham.fun</h3>
+                    <p class="text-gray-300 mb-4">Gokuldham.fun is a fan-made tribute to the beloved Indian TV show "Taarak Mehta Ka Ooltah Chashmah". We create fun, free games inspired by the characters and stories from Gokuldham Society.</p>
+                    <p class="text-gray-300">Our mission is to bring joy to TMKOC fans through interactive entertainment while respecting the original creators and copyright holders.</p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">Quick Links</h3>
+                    <ul class="space-y-2 footer-links">
+                        <li><a href="index.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Home</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-yellow-400 transition-colors">About Us</a></li>
+                        <li><a href="blog.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Blog</a></li>
+                        <li><a href="https://store.gokuldham.fun/" class="text-gray-300 hover:text-yellow-400 transition-colors">Store</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact & Legal -->
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">Legal</h3>
+                    <ul class="space-y-2 footer-links">
+                        <li><a href="privacy.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Terms of Service</a></li>
+                        <li><a href="disclaimer.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Disclaimer</a></li>
+                        <li><a href="copyright.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Copyright</a></li>
+                    </ul>
+                    <div class="mt-4 text-gray-300 text-sm">
+                        <p class="mb-1">Email: contact@gokuldham.fun</p>
+                        <p>Legal: legal@gokuldham.fun</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <div class="mb-4 text-3xl space-x-4">
+                    <span role="img" aria-label="glasses">👓</span>
+                    <span role="img" aria-label="sari">👘</span>
+                    <span role="img" aria-label="cricket">🏏</span>
+                    <span role="img" aria-label="food">🍛</span>
+                    <span role="img" aria-label="celebration">🎉</span>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        Made for fun. Not affiliated with the official show (Neela Tele Films). Just a fan tribute!
+                    </p>
+                    
+                    <div class="text-gray-400 text-sm">
+                        <p>
+                            Website created by 
+                            <a href="https://ishant.shop" target="_blank" rel="noopener" class="text-yellow-400 hover:text-yellow-300 transition-colors duration-200 font-medium">
+                                Ishant Webworks
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-gray-500 text-xs">
+                    <p>© 2023 Gokuldham.fun | All game content is inspired by TMKOC. All rights to the original show belong to Neela Tele Films.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- AGE VERIFICATION FUNCTIONALITY ---
+        const ageModal = document.getElementById('ageModal');
+        const ageConfirm = document.getElementById('ageConfirm');
+        const ageDeny = document.getElementById('ageDeny');
+        
+        // Check if user has already confirmed age
+        if (localStorage.getItem('ageConfirmed') === 'true') {
+            ageModal.classList.remove('active');
+        }
+        
+        ageConfirm.addEventListener('click', function() {
+            localStorage.setItem('ageConfirmed', 'true');
+            ageModal.classList.remove('active');
+        });
+        
+        ageDeny.addEventListener('click', function() {
+            alert('Sorry, you must be 13 or older to access this website.');
+            window.location.href = 'https://www.google.com';
+        });
+
+        // --- MOBILE MENU FUNCTIONALITY ---
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+        
+        menuBtn.addEventListener('click', toggleMobileMenu);
+        closeMenuBtn.addEventListener('click', toggleMobileMenu);
+        menuOverlay.addEventListener('click', toggleMobileMenu);
+        
+        // Close menu when clicking on a link
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', toggleMobileMenu);
+        });
+
+        // --- Global UI Logic ---
+        const bgMusic = document.getElementById('bgMusic');
+        let isMusicPlaying = false;
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicBtn');
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                btn.innerHTML = '<span>🔇</span> <span class="hidden md:inline">Music Off</span>';
+                btn.classList.replace('bg-green-600', 'bg-yellow-600');
+                btn.classList.replace('hover:bg-green-700', 'hover:bg-yellow-700');
+            } else {
+                bgMusic.play().catch(e => console.log("User interaction needed first"));
+                btn.innerHTML = '<span>🔊</span> <span class="hidden md:inline">Music On</span>';
+                btn.classList.replace('bg-yellow-600', 'bg-green-600');
+                btn.classList.replace('hover:bg-yellow-700', 'hover:bg-green-700');
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        function playGame(path) {
+            window.open(path, '_blank');
+        }
+
+        // --- Load Games from JSON ---
+        async function loadGames() {
+            try {
+                const response = await fetch('games.json');
+                const games = await response.json();
+                const gamesContainer = document.getElementById('games-container');
+                
+                gamesContainer.innerHTML = '';
+                
+                games.forEach(game => {
+                    const gameCard = document.createElement('div');
+                    gameCard.className = 'game-card bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-100 flex flex-col h-full';
+                    
+                    const gradientColors = [
+                        'from-blue-400 to-blue-600',
+                        'from-green-400 to-green-600',
+                        'from-purple-400 to-purple-600',
+                        'from-red-400 to-red-600',
+                        'from-yellow-400 to-yellow-600',
+                        'from-indigo-400 to-indigo-600'
+                    ];
+                    
+                    const randomGradient = gradientColors[Math.floor(Math.random() * gradientColors.length)];
+                    
+                    gameCard.innerHTML = `
+                        <div class="h-40 md:h-48 bg-gradient-to-br ${randomGradient} flex items-center justify-center relative overflow-hidden group">
+                            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                            <img src="${game.thumbnail}" loading="lazy" alt="${game.title} Thumbnail" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                            <span class="text-4xl text-white font-bold absolute hidden">${game.title}</span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">${game.title}</h3>
+                            <p class="text-gray-600 mb-4 text-sm">${game.description}</p>
+                            <div class="mt-auto">
+                                <button onclick="playGame('${game.path}')" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl shadow transition border-b-4 border-blue-700 btn-press">
+                                    Play Now
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    gamesContainer.appendChild(gameCard);
+                });
+                
+                // Add scroll animations
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+
+                document.querySelectorAll('.game-card').forEach(card => {
+                    card.style.opacity = '0';
+                    observer.observe(card);
+                });
+                
+            } catch (error) {
+                console.error('Error loading games:', error);
+                document.getElementById('games-container').innerHTML = `
+                    <div class="col-span-3 text-center py-8">
+                        <p class="text-lg text-gray-600">Unable to load games. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load games when page loads
+        document.addEventListener('DOMContentLoaded', loadGames);
+    </script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>About Us | Gokuldham.fun - The Ultimate TMKOC Fan Experience</title>
+    
+    <meta name="description" content="Learn about Gokuldham.fun - the ultimate fan-made TMKOC gaming platform created by Ishant Webworks. Our mission to bring Gokuldham Society to life through games.">
+    
+    <meta name="keywords" content="about Gokuldham.fun, TMKOC fan site, Ishant Webworks, fan tribute, Taarak Mehta games">
+    
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Ishant Webworks">
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="canonical" href="https://gokuldham.fun/about.html">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFBEB;
+            background-image: radial-gradient(#FCD34D 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .comic-font {
+            font-family: 'Comic Neue', cursive;
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-press { transition: all 0.1s ease; }
+        .btn-press:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .menu-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        .menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        /* Footer Styles */
+        .footer-links a {
+            transition: all 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #FCD34D;
+            transform: translateX(5px);
+        }
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.2);
+        }
+    </style>
+</head>
+<body class="text-gray-800 selection:bg-yellow-300 selection:text-yellow-900">
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay fixed inset-0 bg-black bg-opacity-70 z-40"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white z-50 shadow-2xl overflow-y-auto">
+        <div class="p-4 flex justify-between items-center border-b border-gray-200">
+            <span class="text-lg font-bold text-red-600">Menu</span>
+            <button id="closeMenuBtn" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-4">
+                <li><a href="index.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Home</a></li>
+                <li><a href="about.html" class="block py-2 px-4 bg-yellow-100 rounded-lg text-yellow-800 font-medium">About Us</a></li>
+                <li><a href="https://store.gokuldham.fun/" target="_blank" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Store</a></li>
+                <li><a href="contact.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Contact</a></li>
+                <li><a href="index.html#games" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Games</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav class="bg-yellow-400 border-b-4 border-yellow-600 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="index.html" class="bg-white p-1 rounded-lg border-2 border-black shadow-sm block">
+                        <img 
+                            src="logo.png" 
+                            alt="Gokuldham Fun Website Logo" 
+                            class="h-8 md:h-12 w-auto object-contain"
+                            width="48"
+                            height="48"
+                            onerror="this.src='https://upload.wikimedia.org/wikipedia/en/c/c7/Taarak_Mehta_Ka_Ooltah_Chashmah_Logo.png'"
+                        >
+                    </a>
+                    <span class="text-lg md:text-2xl font-extrabold tracking-tight text-red-600 comic-font leading-tight">Gokuldham<span class="text-blue-600">.fun</span></span>
+                </div>
+                
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex space-x-4 font-bold text-yellow-900">
+                        <a href="index.html" class="hover:text-white transition">Home</a>
+                        <a href="about.html" class="hover:text-white transition border-b-2 border-yellow-800">About Us</a>
+                        <a href="https://store.gokuldham.fun/" target="_blank" class="hover:text-white transition">Store</a>
+                        <a href="contact.html" class="hover:text-white transition">Contact</a>
+                        <a href="index.html#games" class="hover:text-white transition">Games</a>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="menuBtn" class="md:hidden text-yellow-900 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8 animate-fade-in-up">
+        <div class="bg-white rounded-3xl shadow-lg p-8 md:p-12 border-4 border-yellow-200">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-8 comic-font">About Gokuldham.fun</h1>
+            
+            <div class="flex flex-col md:flex-row items-center mb-8">
+                <div class="md:w-1/3 mb-6 md:mb-0 flex justify-center">
+                    <div class="w-48 h-48 rounded-full bg-yellow-100 border-4 border-yellow-300 flex items-center justify-center overflow-hidden">
+                        <img src="logo.png" alt="Gokuldham.fun Logo" class="w-full h-full object-cover" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/c/c7/Taarak_Mehta_Ka_Ooltah_Chashmah_Logo.png'">
+                    </div>
+                </div>
+                <div class="md:w-2/3 md:pl-8">
+                    <h2 class="text-2xl font-bold text-yellow-600 mb-4">Our Mission</h2>
+                    <p class="text-gray-700 mb-4 text-lg">
+                        Gokuldham.fun is a fan-made tribute to the beloved Indian TV show <strong>Taarak Mehta Ka Ooltah Chashmah</strong>. 
+                        Our mission is to bring the joy and laughter of Gokuldham Society to fans through interactive games and experiences.
+                    </p>
+                    <p class="text-gray-700 text-lg">
+                        We believe that the characters and stories from TMKOC have become a part of our daily lives, and we wanted to create 
+                        a platform where fans can engage with their favorite characters in new and exciting ways.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-yellow-50 rounded-2xl p-6 mb-8 border-l-4 border-yellow-500">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What We Offer</h2>
+                <ul class="list-disc pl-5 text-gray-700 space-y-2">
+                    <li><strong>Interactive Games:</strong> Play as your favorite characters in exciting adventures</li>
+                    <li><strong>Fan Community:</strong> A place for TMKOC fans to connect and share their love for the show</li>
+                    <li><strong>Regular Updates:</strong> New content and features added frequently</li>
+                    <li><strong>Official Store:</strong> Visit our store for TMKOC merchandise and collectibles</li>
+                </ul>
+            </div>
+            
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">About the Creator</h2>
+                <div class="bg-blue-50 rounded-2xl p-6 border-l-4 border-blue-500">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-blue-200 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-700">Ishant Webworks</h3>
+                            <p class="text-blue-600">Web Developer & TMKOC Fan</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">
+                        Gokuldham.fun was created by <strong>Ishant Webworks</strong>, a passionate web developer and longtime fan of 
+                        Taarak Mehta Ka Ooltah Chashmah. Combining technical skills with love for the show, Ishant has brought 
+                        Gokuldham Society to the digital world for fans to enjoy.
+                    </p>
+                    <div class="mt-4">
+                        <a href="https://ishant.shop" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+                            Visit Ishant Webworks <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-red-50 rounded-2xl p-6 border-l-4 border-red-500">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Important Note</h2>
+                <p class="text-gray-700 mb-4">
+                    Gokuldham.fun is an <strong>unofficial fan-made website</strong> and is not affiliated with, endorsed by, or connected to 
+                    the official Taarak Mehta Ka Ooltah Chashmah TV show, Neela Tele Films, or any of its producers.
+                </p>
+                <p class="text-gray-700">
+                    This website was created out of love for the show and its characters. All trademarks and copyrights belong to their respective owners.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About Section -->
+                <div class="md:col-span-2">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">About Gokuldham.fun</h3>
+                    <p class="text-gray-300 mb-4">Gokuldham.fun is a fan-made tribute to the beloved Indian TV show "Taarak Mehta Ka Ooltah Chashmah". We create fun, free games inspired by the characters and stories from Gokuldham Society.</p>
+                    <p class="text-gray-300">Our mission is to bring joy to TMKOC fans through interactive entertainment while respecting the original creators and copyright holders.</p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">Quick Links</h3>
+                    <ul class="space-y-2 footer-links">
+                        <li><a href="index.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Home</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-yellow-400 transition-colors">About Us</a></li>
+                        <li><a href="https://store.gokuldham.fun/" target="_blank" class="text-gray-300 hover:text-yellow-400 transition-colors">Store</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Contact</a></li>
+                        <li><a href="index.html#games" class="text-gray-300 hover:text-yellow-400 transition-colors">Games</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact & Legal -->
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">Connect With Us</h3>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="social-icon text-gray-300 hover:text-yellow-400 text-2xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-icon text-gray-300 hover:text-yellow-400 text-2xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon text-gray-300 hover:text-yellow-400 text-2xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon text-gray-300 hover:text-yellow-400 text-2xl">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                    <div class="text-gray-300 text-sm">
+                        <p class="mb-1">Email: contact@gokuldham.fun</p>
+                        <p>Feedback: feedback@gokuldham.fun</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <div class="mb-4 text-3xl space-x-4">
+                    <span role="img" aria-label="glasses">👓</span>
+                    <span role="img" aria-label="sari">👘</span>
+                    <span role="img" aria-label="cricket">🏏</span>
+                    <span role="img" aria-label="food">🍛</span>
+                    <span role="img" aria-label="celebration">🎉</span>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        Made for fun. Not affiliated with the official show (Neela Tele Films). Just a fan tribute!
+                    </p>
+                    
+                    <div class="text-gray-400 text-sm">
+                        <p>
+                            Website created by 
+                            <a href="https://ishant.shop" target="_blank" rel="noopener" class="text-yellow-400 hover:text-yellow-300 transition-colors duration-200 font-medium">
+                                Ishant Webworks
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-gray-500 text-xs">
+                    <p>© 2023 Gokuldham.fun | All game content is inspired by TMKOC. All rights to the original show belong to Neela Tele Films.</p>
+                    <p class="mt-1">
+                        <a href="privacy.html" class="hover:text-yellow-400 transition-colors">Privacy Policy</a> | 
+                        <a href="terms.html" class="hover:text-yellow-400 transition-colors">Terms of Service</a> | 
+                        <a href="disclaimer.html" class="hover:text-yellow-400 transition-colors">Disclaimer</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- MOBILE MENU FUNCTIONALITY ---
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+        
+        menuBtn.addEventListener('click', toggleMobileMenu);
+        closeMenuBtn.addEventListener('click', toggleMobileMenu);
+        menuOverlay.addEventListener('click', toggleMobileMenu);
+        
+        // Close menu when clicking on a link
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', toggleMobileMenu);
+        });
+    </script>
+
+</body>
+</html>

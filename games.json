@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Run Jetha Run: The Chappal Chase",
+    "description": "Bapuji is Angry! Dodge obstacles and run through the Gokuldham society.",
+    "path": "games/game1/index.html",
+    "thumbnail": "games/game1/1.jpeg"
+  },
+  {
+    "title": "Bhide's Sakharam Rush",
+    "description": "Help Atmaram Tukaram Bhide deliver his famous Madhavi's Achar & Papad on time!",
+    "path": "games/game2/index.html",
+    "thumbnail": "games/game2/1.jpeg"
+  },
+  {
+    "title": "Goli's Jalebi Heist: Sneaky Snack Attack 3D",
+    "description": "Play as the ultimate foodie Goli in this hilarious 3D challenge! Your mission: Steal the Jalebis while Jethalal reads his newspaper.",
+    "path": "games/game5/index.html",
+    "thumbnail": "games/game5/1.png"
+  },
+  {
+    "title": "Bhide's Discipline Master: Gokuldham Patrol",
+    "description": "Take charge as the 'Ekmeva Secretary' Bhide. Stop Tapu from breaking windows!",
+    "path": "games/game4/index.html",
+    "thumbnail": "games/game4/1.png"
+  }
+]

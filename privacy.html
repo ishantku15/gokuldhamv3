@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Privacy Policy | Gokuldham.fun</title>
+    
+    <meta name="title" content="Privacy Policy | Gokuldham.fun">
+    <meta name="description" content="Privacy Policy for Gokuldham.fun - Learn how we collect, use, and protect your information on our TMKOC fan site.">
+    
+    <meta name="keywords" content="tmkoc privacy, gokuldham privacy, taarak mehta privacy, fan site privacy, game website privacy">
+    
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Ishant Webworks">
+    <meta name="language" content="English">
+    <link rel="canonical" href="https://gokuldham.fun/privacy.html">
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gokuldham.fun/privacy.html">
+    <meta property="og:title" content="Privacy Policy | Gokuldham.fun">
+    <meta property="og:description" content="Privacy Policy for Gokuldham.fun - Learn how we collect, use, and protect your information on our TMKOC fan site.">
+    <meta property="og:image" content="https://gokuldham.fun/logo.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://gokuldham.fun/privacy.html">
+    <meta property="twitter:title" content="Privacy Policy | Gokuldham.fun">
+    <meta property="twitter:description" content="Privacy Policy for Gokuldham.fun - Learn how we collect, use, and protect your information on our TMKOC fan site.">
+    <meta property="twitter:image" content="https://gokuldham.fun/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFBEB;
+            background-image: radial-gradient(#FCD34D 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .comic-font {
+            font-family: 'Comic Neue', cursive;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F59E0B;
+            border-radius: 4px;
+        }
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+        }
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out; }
+        .animate-slide-down { animation: slideDown 0.3s ease-out; }
+        
+        .btn-press { transition: all 0.1s ease; }
+        .btn-press:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .menu-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        .menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Footer Styles */
+        .footer-links a {
+            transition: all 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #FCD34D;
+            transform: translateX(5px);
+        }
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.2);
+        }
+        
+        /* Age Verification Modal */
+        .age-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .age-modal.active {
+            display: flex;
+        }
+        .age-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.5s ease-out;
+        }
+        .age-content h2 {
+            color: #F59E0B;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        .age-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .age-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .age-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .age-confirm {
+            background: #10B981;
+            color: white;
+            border: none;
+        }
+        .age-confirm:hover {
+            background: #059669;
+        }
+        .age-deny {
+            background: #EF4444;
+            color: white;
+            border: none;
+        }
+        .age-deny:hover {
+            background: #DC2626;
+        }
+        
+        /* Legal Dropdown */
+        .legal-dropdown {
+            position: relative;
+        }
+        .legal-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 20;
+        }
+        .legal-dropdown:hover .legal-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .legal-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #4B5563;
+            transition: all 0.2s ease;
+        }
+        .legal-menu a:hover {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        
+        /* Privacy Content Styling */
+        .privacy-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .privacy-content h2 {
+            color: #F59E0B;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #FCD34D;
+            padding-bottom: 0.5rem;
+        }
+        .privacy-content h3 {
+            color: #1F2937;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.3rem;
+        }
+        .privacy-content p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #4B5563;
+        }
+        .privacy-content ul {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        .privacy-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            color: #4B5563;
+        }
+        .last-updated {
+            background: #FEF3C7;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #F59E0B;
+        }
+        .info-box {
+            background: #EFF6FF;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #3B82F6;
+        }
+        .warning-box {
+            background: #FEF2F2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #EF4444;
+        }
+    </style>
+</head>
+<body class="text-gray-800 selection:bg-yellow-300 selection:text-yellow-900">
+
+    <!-- Age Verification Modal -->
+    <div id="ageModal" class="age-modal active">
+        <div class="age-content">
+            <h2 class="text-2xl font-bold">Age Verification Required</h2>
+            <p>This website contains games inspired by the TV show Taarak Mehta Ka Ooltah Chashmah. To access our content, please confirm that you are at least 13 years old or have parental consent.</p>
+            <p class="text-sm text-gray-600">By clicking "I'm 13 or Older", you agree to our <a href="privacy.html" class="text-blue-600 hover:underline">Privacy Policy</a> and <a href="terms.html" class="text-blue-600 hover:underline">Terms of Service</a>.</p>
+            <div class="age-buttons">
+                <button id="ageConfirm" class="age-btn age-confirm">I'm 13 or Older</button>
+                <button id="ageDeny" class="age-btn age-deny">I'm Under 13</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menuOverlay" class="menu-overlay fixed inset-0 bg-black bg-opacity-70 z-40"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white z-50 shadow-2xl overflow-y-auto">
+        <div class="p-4 flex justify-between items-center border-b border-gray-200">
+            <span class="text-lg font-bold text-red-600">Menu</span>
+            <button id="closeMenuBtn" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-4">
+                <li><a href="index.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Home</a></li>
+                <li><a href="about.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">About Us</a></li>
+                <li><a href="blog.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Blog</a></li>
+                <li><a href="https://store.gokuldham.fun/" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Store</a></li>
+                <li><a href="contact.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Contact</a></li>
+                <li><a href="index.html#games" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Games</a></li>
+                <li class="border-t pt-4 mt-4">
+                    <span class="block py-2 px-4 text-gray-500 font-medium">Legal</span>
+                    <ul class="pl-4 mt-2 space-y-2">
+                        <li><a href="privacy.html" class="block py-2 px-4 bg-yellow-100 rounded-lg text-yellow-800 font-medium">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Terms of Service</a></li>
+                        <li><a href="disclaimer.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Disclaimer</a></li>
+                        <li><a href="copyright.html" class="block py-2 px-4 hover:bg-gray-100 rounded-lg transition">Copyright</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <nav class="bg-yellow-400 border-b-4 border-yellow-600 sticky top-0 z-50 shadow-lg animate-fade-in-up">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="index.html" class="bg-white p-1 rounded-lg border-2 border-black shadow-sm block">
+                        <img 
+                            src="logo.png" 
+                            alt="Gokuldham Fun Website Logo" 
+                            class="h-8 md:h-12 w-auto object-contain"
+                            width="48"
+                            height="48"
+                            onerror="this.src='https://upload.wikimedia.org/wikipedia/en/c/c7/Taarak_Mehta_Ka_Ooltah_Chashmah_Logo.png'"
+                        >
+                    </a>
+                    <span class="text-lg md:text-2xl font-extrabold tracking-tight text-red-600 comic-font leading-tight">Gokuldham<span class="text-blue-600">.fun</span></span>
+                </div>
+                
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex space-x-4 font-bold text-yellow-900">
+                        <a href="index.html" class="hover:text-white transition">Home</a>
+                        <a href="about.html" class="hover:text-white transition">About Us</a>
+                        <a href="blog.html" class="hover:text-white transition">Blog</a>
+                        <a href="https://store.gokuldham.fun/" class="hover:text-white transition">Store</a>
+                        <a href="contact.html" class="hover:text-white transition">Contact</a>
+                        <a href="index.html#games" class="hover:text-white transition">Games</a>
+                        <div class="legal-dropdown">
+                            <a href="#" class="hover:text-white transition flex items-center">
+                                Legal <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </a>
+                            <div class="legal-menu">
+                                <a href="privacy.html">Privacy Policy</a>
+                                <a href="terms.html">Terms of Service</a>
+                                <a href="disclaimer.html">Disclaimer</a>
+                                <a href="copyright.html">Copyright</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="menuBtn" class="md:hidden text-yellow-900 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 animate-fade-in-up">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 inline-block border-b-4 border-yellow-400 pb-2">Privacy Policy</h1>
+            <p class="mt-4 text-lg text-gray-600">Your privacy is important to us. Learn how we protect your information.</p>
+        </div>
+
+        <div class="privacy-content animate-fade-in-up">
+            <div class="last-updated">
+                <p><strong>Last Updated:</strong> [Add Date]</p>
+            </div>
+
+            <p>Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your information.</p>
+
+            <h2>1. Information We Collect</h2>
+            <p>We may collect:</p>
+            <ul>
+                <li>Basic technical data (IP address, browser type, device info)</li>
+                <li>Cookies for analytics and improving site experience</li>
+                <li>Email addresses, only if voluntarily submitted by users (e.g., contact forms)</li>
+            </ul>
+            
+            <div class="warning-box">
+                <p><strong>We do NOT collect:</strong></p>
+                <ul>
+                    <li>Financial data</li>
+                    <li>Sensitive personal information</li>
+                    <li>Login/passwords</li>
+                </ul>
+            </div>
+
+            <h2>2. How We Use Information</h2>
+            <p>We use collected data to:</p>
+            <ul>
+                <li>Improve website performance</li>
+                <li>Maintain security</li>
+                <li>Enhance user experience</li>
+                <li>Run analytics (e.g., Google Analytics)</li>
+            </ul>
+            
+            <div class="info-box">
+                <p><strong>We do not sell or rent any user data.</strong></p>
+            </div>
+
+            <h2>3. Cookies</h2>
+            <p>Gokuldham.fun uses cookies for:</p>
+            <ul>
+                <li>Website functionality</li>
+                <li>Analytics</li>
+                <li>Ads personalization (if Google AdSense is enabled)</li>
+            </ul>
+            <p>Users may disable cookies from their browser settings.</p>
+
+            <h2>4. Google AdSense</h2>
+            <p>We use Google AdSense, which may use cookies (including DART cookies) to deliver personalized ads.</p>
+            <p>Users can opt out of personalized advertising by visiting <a href="https://adssettings.google.com" target="_blank" class="text-blue-600 hover:underline">Google's Ads Settings</a>.</p>
+
+            <h2>5. Third-Party Services</h2>
+            <p>We may use:</p>
+            <ul>
+                <li>Google Fonts</li>
+                <li>Google Analytics</li>
+                <li>Advertising networks</li>
+            </ul>
+            <p>Each third-party service has its own privacy policies.</p>
+
+            <h2>6. Data Protection</h2>
+            <p>We use reasonable security measures to protect user data.</p>
+            <p>However, no online system is 100% secure.</p>
+
+            <h2>7. Children's Privacy</h2>
+            <p>Our website is intended for users aged 13 and above. We do not knowingly collect personal information from children under 13.</p>
+            <p>If you believe we have collected information from a child under 13, please contact us immediately at <a href="mailto:legal@gokuldham.fun" class="text-blue-600 hover:underline">legal@gokuldham.fun</a>.</p>
+
+            <h2>8. Changes to Privacy Policy</h2>
+            <p>We may update this policy at any time. Updates will be posted on this page.</p>
+
+            <h2>9. Contact Information</h2>
+            <p>If you have any questions about this Privacy Policy, please contact us at:</p>
+            <p>Email: <a href="mailto:legal@gokuldham.fun" class="text-blue-600 hover:underline">legal@gokuldham.fun</a></p>
+            <p>Website: <a href="https://gokuldham.fun" class="text-blue-600 hover:underline">https://gokuldham.fun</a></p>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-white py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About Section -->
+                <div class="md:col-span-2">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">About Gokuldham.fun</h3>
+                    <p class="text-gray-300 mb-4">Gokuldham.fun is a fan-made tribute to the beloved Indian TV show "Taarak Mehta Ka Ooltah Chashmah". We create fun, free games inspired by the characters and stories from Gokuldham Society.</p>
+                    <p class="text-gray-300">Our mission is to bring joy to TMKOC fans through interactive entertainment while respecting the original creators and copyright holders.</p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">Quick Links</h3>
+                    <ul class="space-y-2 footer-links">
+                        <li><a href="index.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Home</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-yellow-400 transition-colors">About Us</a></li>
+                        <li><a href="blog.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Blog</a></li>
+                        <li><a href="https://store.gokuldham.fun/" class="text-gray-300 hover:text-yellow-400 transition-colors">Store</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact & Legal -->
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4 comic-font">Legal</h3>
+                    <ul class="space-y-2 footer-links">
+                        <li><a href="privacy.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Terms of Service</a></li>
+                        <li><a href="disclaimer.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Disclaimer</a></li>
+                        <li><a href="copyright.html" class="text-gray-300 hover:text-yellow-400 transition-colors">Copyright</a></li>
+                    </ul>
+                    <div class="mt-4 text-gray-300 text-sm">
+                        <p class="mb-1">Email: contact@gokuldham.fun</p>
+                        <p>Legal: legal@gokuldham.fun</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <div class="mb-4 text-3xl space-x-4">
+                    <span role="img" aria-label="glasses">👓</span>
+                    <span role="img" aria-label="sari">👘</span>
+                    <span role="img" aria-label="cricket">🏏</span>
+                    <span role="img" aria-label="food">🍛</span>
+                    <span role="img" aria-label="celebration">🎉</span>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        Made for fun. Not affiliated with the official show (Neela Tele Films). Just a fan tribute!
+                    </p>
+                    
+                    <div class="text-gray-400 text-sm">
+                        <p>
+                            Website created by 
+                            <a href="https://ishant.shop" target="_blank" rel="noopener" class="text-yellow-400 hover:text-yellow-300 transition-colors duration-200 font-medium">
+                                Ishant Webworks
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-gray-500 text-xs">
+                    <p>© 2023 Gokuldham.fun | All game content is inspired by TMKOC. All rights to the original show belong to Neela Tele Films.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- AGE VERIFICATION FUNCTIONALITY ---
+        const ageModal = document.getElementById('ageModal');
+        const ageConfirm = document.getElementById('ageConfirm');
+        const ageDeny = document.getElementById('ageDeny');
+        
+        // Check if user has already confirmed age
+        if (localStorage.getItem('ageConfirmed') === 'true') {
+            ageModal.classList.remove('active');
+        }
+        
+        ageConfirm.addEventListener('click', function() {
+            localStorage.setItem('ageConfirmed', 'true');
+            ageModal.classList.remove('active');
+        });
+        
+        ageDeny.addEventListener('click', function() {
+            alert('Sorry, you must be 13 or older to access this website.');
+            window.location.href = 'https://www.google.com';
+        });
+
+        // --- MOBILE MENU FUNCTIONALITY ---
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('open');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+        
+        menuBtn.addEventListener('click', toggleMobileMenu);
+        closeMenuBtn.addEventListener('click', toggleMobileMenu);
+        menuOverlay.addEventListener('click', toggleMobileMenu);
+        
+        // Close menu when clicking on a link
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', toggleMobileMenu);
+        });
+
+        // Update the last updated date
+        document.addEventListener('DOMContentLoaded', function() {
+            const lastUpdatedElement = document.querySelector('.last-updated p');
+            if (lastUpdatedElement) {
+                const currentDate = new Date();
+                const formattedDate = currentDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                lastUpdatedElement.innerHTML = `<strong>Last Updated:</strong> ${formattedDate}`;
+            }
+        });
+    </script>
+</body>
+</html>

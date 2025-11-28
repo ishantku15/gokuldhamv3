@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bhide's Discipline Master</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #2c3e50;
+            font-family: 'Roboto', sans-serif;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* HUD & Controls */
+        .hud-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: #FFD700;
+            border: 3px solid #000;
+            padding: 8px 16px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            box-shadow: 4px 4px 0px #000;
+            color: #000;
+            border-radius: 8px;
+            text-shadow: 1px 1px 0 #FFF;
+        }
+
+        .timer-box {
+            background: #FFF;
+            color: #d32f2f;
+        }
+
+        .control-btn {
+            pointer-events: auto;
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: transform 0.1s;
+            margin-bottom: 10px;
+        }
+        
+        .control-btn:active {
+            transform: scale(0.9);
+            box-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+        }
+
+        .controls-right {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: auto;
+        }
+
+        /* Overlays */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            color: white;
+            text-align: center;
+        }
+
+        .btn-start {
+            margin-top: 1.5rem;
+            background: #FF5722; /* Deep Orange */
+            color: white;
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            padding: 0.8rem 2.5rem;
+            border: 4px solid #FFF;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 0 #bf360c; /* 3D effect */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #bf360c;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Speech Bubble */
+        .bhide-speech {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 3px solid black;
+            border-radius: 20px;
+            padding: 10px 25px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.4rem;
+            color: black;
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.3);
+            display: none;
+            white-space: nowrap;
+            z-index: 15;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes popIn {
+            0% { transform: translateX(-50%) scale(0); opacity: 0; }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        .instruction-box {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+            margin-bottom: 20px;
+            max-width: 90%;
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HUD Layer -->
+    <div class="hud-layer">
+        <div class="top-bar">
+            <div class="stats-container">
+                <div class="stat-box">Points: <span id="scoreVal">0</span></div>
+                <div class="stat-box timer-box">Time: <span id="timeVal">60</span></div>
+            </div>
+            
+            <div class="controls-right">
+                <button id="btnFullscreen" class="control-btn" title="Full Screen">⛶</button>
+                <button id="btnExit" class="control-btn text-red-600" title="Exit Game">✖</button>
+            </div>
+        </div>
+        
+        <!-- Speech Bubble Container -->
+        <div id="speechBubble" class="bhide-speech">Ae Pagle!</div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="overlay">
+        <h1 style="font-family: 'Bangers', cursive; font-size: 3.5rem; text-shadow: 4px 4px #FF5722; line-height: 1; margin-bottom: 10px;">
+            Bhide's <br><span style="color: #FFD700">Discipline Master</span>
+        </h1>
+        
+        <div class="instruction-box">
+            <p class="text-white font-bold mb-2 border-b border-gray-500 pb-1">MISSION OBJECTIVES:</p>
+            <ul class="text-sm space-y-2 text-gray-200">
+                <li class="flex items-center"><span class="w-6 text-xl">🏏</span> Stop Tapu playing Cricket (+10)</li>
+                <li class="flex items-center"><span class="w-6 text-xl">👨🏻</span> Scold Jethalal for being late (+15)</li>
+                <li class="flex items-center"><span class="w-6 text-xl">💰</span> Collect Maintenance Cheque (+20)</li>
+                <li class="flex items-center text-red-300 font-bold"><span class="w-6 text-xl">👴🏼</span> DO NOT Disturb Bapuji! (-50)</li>
+            </ul>
+        </div>
+
+        <button id="startBtn" class="btn-start">Start Patrol</button>
+        <p class="mt-4 text-xs text-yellow-400 opacity-70">*Enable Sound for Dialogs*</p>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="overlay hidden">
+        <h1 style="font-family: 'Bangers', cursive; font-size: 4rem; color: #FF5722; text-shadow: 2px 2px #FFF;">Time Up!</h1>
+        <div class="bg-white text-black p-6 rounded-xl border-4 border-black mb-6 shadow-[8px_8px_0_#000]">
+            <p class="text-lg font-bold uppercase tracking-wider text-gray-600">Discipline Score</p>
+            <p class="text-5xl font-black my-2" id="finalScore">0</p>
+            <div class="h-1 w-full bg-gray-200 my-3"></div>
+            <p id="rankText" class="text-xl font-bold italic text-blue-600">"Besist!"</p>
+        </div>
+        <div class="flex gap-4">
+            <button id="restartBtn" class="btn-start" style="font-size: 1.5rem;">Patrol Again</button>
+            <button id="menuBtn" class="btn-start" style="background: #546E7A; font-size: 1.5rem;">Exit</button>
+        </div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        /**
+         * ENGINE SETUP
+         */
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d', { alpha: false }); // Optimize for no transparency on base
+        let w, h;
+        let scaleFactor = 1;
+
+        // Game Constants
+        const GRID_ROWS = 3;
+        const GRID_COLS = 3;
+        const ENTITY_NONE = 0;
+        const ENTITY_TAPU = 1;
+        const ENTITY_JETHALAL = 2;
+        const ENTITY_CHEQUE = 3;
+        const ENTITY_BAPUJI = 4;
+
+        // Game State
+        let isPlaying = false;
+        let score = 0;
+        let timeLeft = 60;
+        let animationFrameId;
+        let lastTime = 0;
+        let spawnTimer = 0;
+        let gameTimeAccumulator = 0;
+        
+        let windows = []; 
+        let particles = [];
+
+        // Audio System
+        const synth = window.speechSynthesis;
+        let voicesLoaded = false;
+        
+        // --- INITIALIZATION ---
+        function init() {
+            resize();
+            window.addEventListener('resize', resize);
+            
+            // Buttons
+            document.getElementById('startBtn').addEventListener('click', startGame);
+            document.getElementById('restartBtn').addEventListener('click', startGame);
+            document.getElementById('menuBtn').addEventListener('click', exitGame);
+            document.getElementById('btnExit').addEventListener('click', exitGame);
+            document.getElementById('btnFullscreen').addEventListener('click', toggleFullScreen);
+            
+            // Input
+            canvas.addEventListener('mousedown', handleInput);
+            canvas.addEventListener('touchstart', handleInput, {passive: false});
+
+            // Initial render
+            drawScene();
+        }
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            calculateGrid();
+            if (!isPlaying) drawScene(); // Redraw static scene if not playing
+        }
+
+        function calculateGrid() {
+            windows = [];
+            // Dynamically size building to fit screen nicely
+            const isMobile = w < 600;
+            const marginX = isMobile ? 10 : w * 0.2;
+            const buildW = w - (marginX * 2);
+            // Height: Leave space for roof (15%) and ground (5%)
+            const buildStartH = h * 0.15;
+            const buildH = h * 0.8;
+            
+            const winW = buildW / GRID_COLS;
+            const winH = buildH / GRID_ROWS;
+
+            for(let r=0; r<GRID_ROWS; r++) {
+                for(let c=0; c<GRID_COLS; c++) {
+                    windows.push({
+                        x: marginX + (c * winW) + (winW * 0.15),
+                        y: buildStartH + (r * winH) + (winH * 0.1),
+                        w: winW * 0.7,
+                        h: winH * 0.65,
+                        entity: ENTITY_NONE,
+                        state: 0, // 0: hidden, 1: up, 2: visible, 3: down
+                        animY: 0, 
+                        timer: 0,
+                        id: r + "_" + c // Unique ID for tracking
+                    });
+                }
+            }
+            scaleFactor = Math.min(w, h) / 1000;
+        }
+
+        // --- GAME LOOP ---
+        function startGame() {
+            if (synth.speaking) synth.cancel();
+            
+            score = 0;
+            timeLeft = 60;
+            isPlaying = true;
+            particles = [];
+            
+            // Reset windows
+            windows.forEach(w => {
+                w.state = 0;
+                w.entity = ENTITY_NONE;
+                w.animY = 0;
+            });
+
+            document.getElementById('scoreVal').innerText = score;
+            document.getElementById('timeVal').innerText = timeLeft;
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            document.getElementById('btnExit').style.display = 'flex'; // Show exit btn
+
+            speak("Ekmeva Secretary Bhide reporting!", "bhide");
+
+            lastTime = performance.now();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function exitGame() {
+            isPlaying = false;
+            cancelAnimationFrame(animationFrameId);
+            document.getElementById('startScreen').classList.remove('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            document.getElementById('btnExit').style.display = 'none';
+        }
+
+        function gameLoop(timestamp) {
+            if (!isPlaying) return;
+
+            const deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+
+            update(deltaTime);
+            drawScene();
+
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        function update(dt) {
+            // Timer Logic
+            gameTimeAccumulator += dt;
+            if (gameTimeAccumulator >= 1000) {
+                timeLeft--;
+                document.getElementById('timeVal').innerText = timeLeft;
+                gameTimeAccumulator -= 1000;
+                if (timeLeft <= 0) endGame();
+            }
+
+            // Spawning Logic
+            spawnTimer += dt;
+            // Spawn speed increases as time decreases
+            const spawnRate = timeLeft > 30 ? 1000 : 700; 
+            if (spawnTimer > spawnRate) {
+                trySpawn();
+                spawnTimer = 0;
+            }
+
+            // Update Windows
+            windows.forEach(win => {
+                const animSpeed = 0.05 * (dt / 16); // Normalize to 60fps
+
+                if (win.state === 1) { // Rising
+                    win.animY += animSpeed;
+                    if (win.animY >= 1) {
+                        win.animY = 1;
+                        win.state = 2;
+                        win.timer = 2000; // Stay ms
+                    }
+                } else if (win.state === 2) { // Holding
+                    win.timer -= dt;
+                    if (win.timer <= 0) {
+                        win.state = 3;
+                    }
+                } else if (win.state === 3) { // Hiding
+                    win.animY -= animSpeed;
+                    if (win.animY <= 0) {
+                        win.animY = 0;
+                        win.state = 0;
+                        win.entity = ENTITY_NONE;
+                    }
+                }
+            });
+
+            // Update Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+                p.vy += 0.5; // Gravity
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function endGame() {
+            isPlaying = false;
+            document.getElementById('finalScore').innerText = score;
+            const rankText = document.getElementById('rankText');
+            
+            if (score < 50) {
+                rankText.innerText = '"Besist! Undisciplined!"';
+                rankText.className = "text-xl font-bold italic text-red-600";
+                speak("Besist! Very undisciplined!", "bhide");
+            } else if (score < 150) {
+                rankText.innerText = '"Not bad, but watch Tapu!"';
+                rankText.className = "text-xl font-bold italic text-yellow-600";
+                speak("Not bad.", "bhide");
+            } else {
+                rankText.innerText = '"Excellent! Gokuldham is proud!"';
+                rankText.className = "text-xl font-bold italic text-green-600";
+                speak("Excellent! Gokuldham is proud!", "bhide");
+            }
+            
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('btnExit').style.display = 'none';
+        }
+
+        // --- SPAWN LOGIC ---
+        function trySpawn() {
+            const emptyWindows = windows.filter(w => w.state === 0);
+            if (emptyWindows.length === 0) return;
+
+            // Pick random window
+            const target = emptyWindows[Math.floor(Math.random() * emptyWindows.length)];
+            
+            // Determine type
+            const rand = Math.random();
+            if (rand < 0.40) target.entity = ENTITY_TAPU;      // 40%
+            else if (rand < 0.70) target.entity = ENTITY_JETHALAL; // 30%
+            else if (rand < 0.90) target.entity = ENTITY_CHEQUE;   // 20%
+            else target.entity = ENTITY_BAPUJI;                 // 10%
+
+            target.state = 1;
+            target.animY = 0;
+        }
+
+        // --- DRAWING ---
+        function drawScene() {
+            // Sky Gradient
+            const grad = ctx.createLinearGradient(0, 0, 0, h);
+            grad.addColorStop(0, '#4facfe');
+            grad.addColorStop(1, '#00f2fe');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+
+            drawBuilding();
+            drawWindows();
+            
+            // Draw Particles
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                if(p.type === 'star') {
+                    drawStar(p.x, p.y, 5, p.size, p.size/2);
+                } else {
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                }
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            });
+        }
+
+        function drawStar(cx, cy, spikes, outerRadius, innerRadius) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            let step = Math.PI / spikes;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+        }
+
+        function drawBuilding() {
+            const isMobile = w < 600;
+            const marginX = isMobile ? 10 : w * 0.2;
+            const buildY = h * 0.15;
+            const buildW = w - (marginX * 2);
+            
+            // Building Wall (Textured)
+            ctx.fillStyle = '#FFE0B2'; // Base color
+            ctx.fillRect(marginX, buildY, buildW, h);
+            
+            // Brick Pattern
+            ctx.fillStyle = 'rgba(161, 136, 127, 0.3)';
+            const brickH = 20;
+            const brickW = 40;
+            for(let y = buildY; y < h; y+= brickH) {
+                let offset = (y/brickH % 2 === 0) ? 0 : brickW/2;
+                for(let x = marginX - offset; x < w - marginX; x+= brickW + 5) {
+                    if (x >= marginX) // Clip
+                        ctx.fillRect(x, y, brickW, brickH - 2);
+                }
+            }
+
+            // Roof
+            ctx.fillStyle = '#D84315';
+            ctx.beginPath();
+            ctx.moveTo(marginX - 20, buildY);
+            ctx.lineTo(w/2, h * 0.05); // Apex
+            ctx.lineTo(w - marginX + 20, buildY);
+            ctx.fill();
+            // Roof details
+            ctx.strokeStyle = '#BF360C';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(marginX - 20, buildY);
+            ctx.lineTo(w/2, h * 0.05);
+            ctx.lineTo(w - marginX + 20, buildY);
+            ctx.stroke();
+
+            // Signboard
+            const signW = Math.min(300 * scaleFactor, buildW * 0.8);
+            const signH = 50 * scaleFactor;
+            const signX = w/2 - signW/2;
+            const signY = buildY - 20 * scaleFactor;
+            
+            // Shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.fillRect(signX + 5, signY + 5, signW, signH);
+            
+            // Board
+            ctx.fillStyle = '#FFF';
+            ctx.fillRect(signX, signY, signW, signH);
+            ctx.strokeStyle = '#3E2723';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(signX, signY, signW, signH);
+            
+            ctx.fillStyle = '#3E2723';
+            ctx.font = `bold ${24 * scaleFactor}px 'Bangers'`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText("GOKULDHAM SOCIETY", w/2, signY + signH/2);
+        }
+
+        function drawEntity(type, x, y, width, height, progress) {
+            const centerX = x + width/2;
+            const bottomY = y + height;
+            const drawH = height * progress; // How much to show
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(x, y, width, height);
+            ctx.clip(); // Clip to window
+
+            ctx.translate(centerX, bottomY);
+            ctx.translate(0, -drawH); // Move up
+
+            if (type === ENTITY_TAPU) {
+                // Tapu
+                // Body
+                ctx.fillStyle = '#E6EE9C'; // Light green shirt
+                ctx.fillRect(-width*0.25, 0, width*0.5, height*0.4);
+                // Head
+                ctx.fillStyle = '#FFCC80';
+                ctx.beginPath(); ctx.arc(0, 0, width*0.22, 0, Math.PI*2); ctx.fill();
+                // Cap (Backwards)
+                ctx.fillStyle = '#F44336';
+                ctx.beginPath(); ctx.arc(0, -5, width*0.23, Math.PI, 0); ctx.fill();
+                ctx.fillRect(-width*0.23, -5, width*0.46, 8);
+                // Bat
+                ctx.fillStyle = '#8D6E63';
+                ctx.save();
+                ctx.rotate(-0.4);
+                ctx.fillRect(width*0.15, -width*0.1, 12, height*0.6);
+                ctx.restore();
+
+            } else if (type === ENTITY_JETHALAL) {
+                // Jethalal
+                // Shirt (Polka dots simulated)
+                ctx.fillStyle = '#FF9800'; 
+                ctx.beginPath(); ctx.arc(0, width*0.35, width*0.3, Math.PI, 0); ctx.fill();
+                // Head
+                ctx.fillStyle = '#FFCC80';
+                ctx.beginPath(); ctx.arc(0, 0, width*0.25, 0, Math.PI*2); ctx.fill();
+                // Mustache
+                ctx.strokeStyle = 'black'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(-10, 5); ctx.quadraticCurveTo(0, 0, 10, 5); ctx.stroke();
+                // Hair (Side part)
+                ctx.fillStyle = 'black';
+                ctx.beginPath(); ctx.moveTo(-width*0.2, -10); ctx.arc(0, -5, width*0.26, Math.PI, 0); ctx.lineTo(width*0.2, 0); ctx.fill();
+
+            } else if (type === ENTITY_CHEQUE) {
+                // Cheque
+                ctx.fillStyle = '#E0F7FA';
+                ctx.fillRect(-width*0.35, -height*0.25, width*0.7, height*0.5);
+                ctx.strokeStyle = '#006064'; ctx.lineWidth = 2;
+                ctx.strokeRect(-width*0.35, -height*0.25, width*0.7, height*0.5);
+                ctx.fillStyle = '#006064'; ctx.font = `bold ${width*0.2}px Arial`; 
+                ctx.fillText("₹", 0, 0);
+
+            } else if (type === ENTITY_BAPUJI) {
+                // Bapuji
+                // Kurta
+                ctx.fillStyle = '#FFF';
+                ctx.beginPath(); ctx.arc(0, width*0.35, width*0.32, Math.PI, 0); ctx.fill();
+                // Head
+                ctx.fillStyle = '#D7CCC8';
+                ctx.beginPath(); ctx.arc(0, 0, width*0.25, 0, Math.PI*2); ctx.fill();
+                // Topi
+                ctx.fillStyle = '#FFF';
+                ctx.fillRect(-width*0.26, -width*0.2, width*0.52, width*0.15);
+                // Glasses
+                ctx.strokeStyle = 'black'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(-8, 0, 6, 0, Math.PI*2); ctx.stroke();
+                ctx.beginPath(); ctx.arc(8, 0, 6, 0, Math.PI*2); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(-2, 0); ctx.lineTo(2, 0); ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        function drawWindows() {
+            windows.forEach(win => {
+                // Window Shadow/Depth (Inside)
+                ctx.fillStyle = '#263238'; // Dark blue-grey interior
+                ctx.fillRect(win.x, win.y, win.w, win.h);
+
+                // Draw Entity inside
+                if (win.entity !== ENTITY_NONE) {
+                    drawEntity(win.entity, win.x, win.y, win.w, win.h, win.animY);
+                }
+
+                // Window Frame (Outer)
+                ctx.strokeStyle = '#5D4037';
+                ctx.lineWidth = 6;
+                ctx.strokeRect(win.x, win.y, win.w, win.h);
+
+                // Grills/Bars
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#4E342E';
+                // Vertical Bar
+                ctx.beginPath(); ctx.moveTo(win.x + win.w/2, win.y); ctx.lineTo(win.x + win.w/2, win.y + win.h); ctx.stroke();
+                // Horizontal Bar
+                ctx.beginPath(); ctx.moveTo(win.x, win.y + win.h/2); ctx.lineTo(win.x + win.w, win.y + win.h/2); ctx.stroke();
+
+                // Window Sill (Bottom)
+                ctx.fillStyle = '#795548';
+                ctx.fillRect(win.x - 5, win.y + win.h, win.w + 10, 10);
+                // Shadow under sill
+                ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                ctx.fillRect(win.x - 5, win.y + win.h + 10, win.w + 10, 5);
+            });
+        }
+
+        // --- INPUT HANDLING ---
+        function handleInput(e) {
+            if (!isPlaying) return;
+            e.preventDefault();
+
+            // Get coordinates
+            let clickX, clickY;
+            if (e.type === 'touchstart') {
+                clickX = e.touches[0].clientX;
+                clickY = e.touches[0].clientY;
+            } else {
+                clickX = e.clientX;
+                clickY = e.clientY;
+            }
+
+            // Check Collision
+            let hit = false;
+            for(let win of windows) {
+                if (clickX >= win.x && clickX <= win.x + win.w &&
+                    clickY >= win.y && clickY <= win.y + win.h) {
+                    
+                    if (win.state >= 1 && win.state <= 2 && win.entity !== ENTITY_NONE) {
+                        processHit(win);
+                        hit = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        function processHit(win) {
+            let points = 0;
+            const type = win.entity;
+            const cx = win.x + win.w/2;
+            const cy = win.y + win.h/2;
+
+            if (type === ENTITY_TAPU) {
+                points = 10;
+                speak("Hey! No cricket!", "bhide");
+                spawnParticles(cx, cy, '#FFF', 'star');
+            } else if (type === ENTITY_JETHALAL) {
+                points = 15;
+                speak("Jethalal late again!", "bhide");
+                spawnParticles(cx, cy, '#FF9800', 'circle');
+            } else if (type === ENTITY_CHEQUE) {
+                points = 20;
+                speak("Maintenance received!", "bhide");
+                spawnParticles(cx, cy, '#00E676', 'star');
+            } else if (type === ENTITY_BAPUJI) {
+                points = -50;
+                speak("Ah! Sorry Chachaji!", "bhide");
+                spawnParticles(cx, cy, '#F44336', 'circle');
+                // Shake screen
+                canvas.style.transform = `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px)`;
+                setTimeout(() => canvas.style.transform = 'none', 100);
+            }
+
+            score += points;
+            if (score < 0) score = 0;
+            document.getElementById('scoreVal').innerText = score;
+            
+            // Hide window immediately
+            win.state = 3; 
+        }
+
+        function spawnParticles(x, y, color, type) {
+            for(let i=0; i<8; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    life: 1.0,
+                    color: color,
+                    size: Math.random() * 5 + 3,
+                    type: type
+                });
+            }
+        }
+
+        function speak(text, type) {
+            if (!window.speechSynthesis) return;
+            
+            // UI text
+            const bubble = document.getElementById('speechBubble');
+            bubble.innerText = text;
+            bubble.style.display = 'block';
+            // Reset animation
+            bubble.style.animation = 'none';
+            bubble.offsetHeight; 
+            bubble.style.animation = 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+
+            // Audio
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = 1.1;
+            if (type === 'bhide') u.pitch = 0.9;
+            u.volume = 1;
+            synth.speak(u);
+
+            setTimeout(() => { bubble.style.display = 'none'; }, 1500);
+        }
+
+        // --- FULL SCREEN ---
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Init
+        init();
+
+    </script>
+</body>
+</html>

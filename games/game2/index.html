@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bhide's 3D Sakharam Adventure - TMKOC Game</title>
+    <meta name="description" content="Play Bhide's 3D Sakharam Adventure - An exciting 3D TMKOC game where Bhide rides his scooter Sakharam through Gokuldham Society. Fun, free online game based on Taarak Mehta Ka Ooltah Chashmah.">
+    <meta name="keywords" content="tmkoc game, bhide game, sakharam scooter game, taarak mehta ka ooltah chashmah game, bhide 3d adventure, free online game, indian tv show game, comedy game, gokuldham society game, madhavi bhide game">
+    <meta name="author" content="TMKOC Games">
+    <meta property="og:title" content="Bhide's 3D Sakharam Adventure - TMKOC Game">
+    <meta property="og:description" content="Play Bhide's 3D Sakharam Adventure - An exciting 3D TMKOC game where Bhide rides his scooter Sakharam through Gokuldham Society.">
+    <meta property="og:type" content="website">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #87CEEB;
+            font-family: 'Fredoka', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        #game-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .hud {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            text-shadow: 2px 2px 0 #000;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .hud-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .hud-btn {
+            pointer-events: auto;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 24px;
+            transition: background 0.2s;
+        }
+        .hud-btn:active { transform: scale(0.95); }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 30;
+            pointer-events: auto;
+            color: white;
+            text-align: center;
+            transition: opacity 0.3s;
+        }
+
+        .hidden { opacity: 0; pointer-events: none; }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #FCD34D;
+            text-shadow: 4px 4px 0 #B91C1C;
+            margin: 0;
+            line-height: 1.1;
+            transform: skew(-5deg);
+        }
+
+        .btn {
+            background: linear-gradient(to bottom, #F59E0B, #D97706);
+            border: 4px solid #fff;
+            padding: 15px 50px;
+            font-size: 24px;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: bold;
+            margin-top: 30px;
+            box-shadow: 0 6px 0 #92400E;
+            transition: transform 0.1s, box-shadow 0.1s;
+            pointer-events: auto;
+        }
+        .btn:active { transform: translateY(6px); box-shadow: 0 0 0 #92400E; }
+
+        .nav-controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .nav-btn {
+            pointer-events: auto;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 40px;
+            backdrop-filter: blur(4px);
+            transition: transform 0.1s;
+            user-select: none;
+            cursor: pointer;
+        }
+        .nav-btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.95); }
+
+        .control-label { font-size: 12px; position: absolute; bottom: -20px; opacity: 0.8; text-shadow: 1px 1px 0 #000; }
+
+        .dialogue-bubble {
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: white;
+            color: black;
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 15;
+            pointer-events: none;
+            text-align: center;
+            max-width: 80%;
+        }
+        .dialogue-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: white transparent;
+            transform: translateX(-50%);
+        }
+        .dialogue-bubble.show { transform: translateX(-50%) scale(1); }
+        
+        /* New styles for enhanced graphics */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .speed-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, rgba(255,255,255,0.1) 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container"></div>
+<div id="speedEffect" class="speed-effect"></div>
+
+<div class="ui-layer">
+    <div class="hud">
+        <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+                <span class="text-yellow-300 text-3xl">₹</span>
+                <span id="score" class="text-3xl">0</span>
+            </div>
+            <div class="w-32 h-4 bg-gray-700 rounded-full border-2 border-white overflow-hidden mt-1">
+                <div id="health-bar" class="h-full bg-green-500 transition-all duration-300" style="width: 100%;"></div>
+            </div>
+        </div>
+        
+        <div class="hud-controls">
+            <div id="soundBtn" class="hud-btn" title="Toggle Sound">🔊</div>
+            <div id="fullscreenBtn" class="hud-btn" title="Toggle Fullscreen">⛶</div>
+        </div>
+    </div>
+    
+    <div id="dialogueBox" class="dialogue-bubble">
+        "Hamare Zamane Mein..."
+    </div>
+
+    <div class="nav-controls">
+        <div id="btnLeft" class="nav-btn"><span>←</span><div class="control-label">LEFT</div></div>
+        <div id="btnRight" class="nav-btn"><span>→</span><div class="control-label">RIGHT</div></div>
+    </div>
+</div>
+
+<div id="startScreen" class="screen">
+    <h1>SAKHARAM<br>RUSH 3D</h1>
+    <p class="text-xl mt-2 text-yellow-200">Gokuldham Delivery Service</p>
+    <button class="btn" onclick="if(window.game) window.game.start()">Start Scooter</button>
+</div>
+
+<div id="gameOverScreen" class="screen hidden">
+    <h1 class="text-red-500">ACCIDENT!</h1>
+    <p class="text-2xl mt-4 italic" id="endQuote">"Arre Bhide ye kya kiya!"</p>
+    <div class="text-4xl font-bold mt-4 text-yellow-400">₹<span id="finalScore">0</span></div>
+    <button class="btn" onclick="if(window.game) window.game.reset()">Repair & Retry</button>
+</div>
+
+<script>
+    // ==========================================
+    // USER CONFIGURATION: ADD IMAGE URL HERE
+    // ==========================================
+    // Leave empty to use the default generated Bhide character.
+    // Example: const BHIDE_IMAGE_URL = "https://i.imgur.com/example.png";
+    const BHIDE_IMAGE_URL = ""; 
+    // ==========================================
+
+
+    // --- Audio Manager (Safe Mode) ---
+    class AudioManager {
+        constructor() {
+            this.enabled = true;
+            this.ctx = null;
+            this.engineOsc = null;
+            this.engineGain = null;
+            this.voices = [];
+            
+            try {
+                this.synth = window.speechSynthesis;
+                if (this.synth && this.synth.onvoiceschanged !== undefined) {
+                    this.synth.onvoiceschanged = () => this.voices = this.synth.getVoices();
+                }
+            } catch(e) {
+                console.warn("Speech Synthesis not supported");
+                this.synth = null;
+            }
+        }
+
+        init() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext && !this.ctx) {
+                    this.ctx = new AudioContext();
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume().catch(e => console.log("Audio resume failed", e));
+                }
+            } catch(e) {
+                console.warn("Audio Context not supported");
+                this.enabled = false;
+            }
+        }
+
+        toggle() {
+            this.enabled = !this.enabled;
+            const btn = document.getElementById('soundBtn');
+            if(btn) btn.innerText = this.enabled ? '🔊' : '🔇';
+            
+            if (!this.enabled) {
+                this.stopEngine();
+                if(this.synth) this.synth.cancel();
+            } else {
+                this.startEngine();
+            }
+            return this.enabled;
+        }
+
+        startEngine() {
+            if (!this.enabled || !this.ctx) return;
+            try {
+                if(this.engineOsc) return;
+                this.engineOsc = this.ctx.createOscillator();
+                this.engineGain = this.ctx.createGain();
+                this.engineOsc.type = 'sawtooth';
+                this.engineOsc.frequency.setValueAtTime(100, this.ctx.currentTime);
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass'; filter.frequency.value = 400;
+                this.engineOsc.connect(filter); filter.connect(this.engineGain);
+                this.engineGain.connect(this.ctx.destination);
+                this.engineGain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                this.engineOsc.start();
+            } catch(e) { console.warn("Audio Error", e); }
+        }
+
+        updateEnginePitch(speedFactor) {
+            if (this.engineOsc && this.enabled && this.ctx) {
+                try {
+                    const freq = 80 + (speedFactor * 200); 
+                    this.engineOsc.frequency.setTargetAtTime(freq, this.ctx.currentTime, 0.1);
+                } catch(e) {}
+            }
+        }
+
+        stopEngine() {
+            try {
+                if (this.engineOsc) {
+                    this.engineOsc.stop(); this.engineOsc.disconnect(); this.engineOsc = null;
+                }
+            } catch(e) {}
+        }
+
+        playCollect() {
+            if (!this.enabled || !this.ctx) return;
+            try {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1760, this.ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.1);
+            } catch(e) {}
+        }
+
+        playCrash() {
+            if (!this.enabled || !this.ctx) return;
+            try {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(100, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(20, this.ctx.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.5);
+                osc.start(); osc.stop(this.ctx.currentTime + 0.5);
+            } catch(e) {}
+        }
+
+        speak(text) {
+            if (!this.enabled || !this.synth) return;
+            try {
+                this.synth.cancel();
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.rate = 1.1; utter.pitch = 0.9;
+                if (this.voices.length > 0) {
+                    const voice = this.voices.find(v => v.lang.includes('IN')) || this.voices[0];
+                    if (voice) utter.voice = voice;
+                }
+                this.synth.speak(utter);
+                const bubble = document.getElementById('dialogueBox');
+                if(bubble) {
+                    bubble.innerText = text;
+                    bubble.classList.add('show');
+                    setTimeout(() => bubble.classList.remove('show'), 3000);
+                }
+            } catch(e) { console.warn("TTS failed", e); }
+        }
+    }
+
+    // --- Game Engine & Logic ---
+
+    class Game {
+        constructor() {
+            this.container = document.getElementById('game-container');
+            this.scoreEl = document.getElementById('score');
+            this.healthEl = document.getElementById('health-bar');
+            this.finalScoreEl = document.getElementById('finalScore');
+            this.startScreen = document.getElementById('startScreen');
+            this.gameOverScreen = document.getElementById('gameOverScreen');
+            this.speedEffect = document.getElementById('speedEffect');
+            
+            this.audio = new AudioManager();
+            this.scene = null;
+            this.camera = null;
+            this.renderer = null;
+            this.player = null;
+            
+            this.score = 0;
+            this.health = 100;
+            this.gameSpeed = 0.5;
+            this.lane = 1; 
+            this.laneWidth = 4.5;
+            this.isGameOver = true;
+
+            this.objects = [];
+            this.particles = [];
+            this.screenParticles = [];
+            this.lastSpawnTime = 0;
+            this.lastExhaustTime = 0;
+
+            this.dialogues = {
+                start: ["Main Atmaram Tukaram Bhide!", "Gokuldham ka ekmeva secretary!", "Sakharam, chalo!", "Discipline is very important!"],
+                collect: ["Shabash!", "Maintenance check!", "Very Good!", "Fund collection!"],
+                crash: ["Are beta masti nahi!", "Hey Maa Mataji!", "Sakharam ko lag gayi!", "Nonsense!", "Tapu sena ki shararat hai!"],
+                random: ["Hamare zamane mein...", "Society ka maintenance baki hai?", "Ae Bhide!", "Swaraj is my birthright!"]
+            };
+
+            try {
+                this.initThree();
+                this.addLights();
+                this.createEnvironment();
+                this.createPlayer();
+                this.setupInputs();
+                
+                this.animate = this.animate.bind(this);
+                requestAnimationFrame(this.animate);
+                
+                setInterval(() => {
+                    if (!this.isGameOver && Math.random() > 0.7) {
+                        const text = this.dialogues.random[Math.floor(Math.random() * this.dialogues.random.length)];
+                        this.audio.speak(text);
+                    }
+                }, 10000);
+            } catch(e) {
+                console.error("Game Init Error", e);
+            }
+        }
+
+        initThree() {
+            this.scene = new THREE.Scene();
+            this.scene.background = new THREE.Color(0x87CEEB);
+            this.scene.fog = new THREE.Fog(0x87CEEB, 20, 60);
+
+            this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+            this.camera.position.set(0, 5, 12);
+            this.camera.lookAt(0, 0, -5);
+
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.shadowMap.enabled = true;
+            this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            this.renderer.outputEncoding = THREE.sRGBEncoding;
+            if(this.container) this.container.appendChild(this.renderer.domElement);
+
+            window.addEventListener('resize', () => {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        addLights() {
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            this.scene.add(ambientLight);
+            
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(10, 20, 10);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 2048;
+            dirLight.shadow.mapSize.height = 2048;
+            dirLight.shadow.camera.near = 0.5;
+            dirLight.shadow.camera.far = 50;
+            dirLight.shadow.camera.left = -20;
+            dirLight.shadow.camera.right = 20;
+            dirLight.shadow.camera.top = 20;
+            dirLight.shadow.camera.bottom = -20;
+            this.scene.add(dirLight);
+            
+            // Add rim light for better 3D effect
+            const rimLight = new THREE.DirectionalLight(0x4488ff, 0.3);
+            rimLight.position.set(-10, 5, -10);
+            this.scene.add(rimLight);
+        }
+
+        createEnvironment() {
+            // Ground with texture
+            const planeGeometry = new THREE.PlaneGeometry(200, 200);
+            const planeMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x4ADE80,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const ground = new THREE.Mesh(planeGeometry, planeMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.1;
+            ground.receiveShadow = true;
+            this.scene.add(ground);
+
+            // Road with texture
+            const roadGeo = new THREE.PlaneGeometry(14, 200);
+            const roadMat = new THREE.MeshStandardMaterial({ 
+                color: 0x333333,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+            const road = new THREE.Mesh(roadGeo, roadMat);
+            road.rotation.x = -Math.PI / 2;
+            road.receiveShadow = true;
+            this.scene.add(road);
+
+            // Road markings with better materials
+            this.stripes = [];
+            const stripeGeo = new THREE.PlaneGeometry(0.3, 4);
+            const stripeMat = new THREE.MeshStandardMaterial({ 
+                color: 0xFFFFFF,
+                emissive: 0x222222,
+                emissiveIntensity: 0.2
+            });
+            
+            for(let i=0; i<20; i++) {
+                let s1 = new THREE.Mesh(stripeGeo, stripeMat);
+                s1.rotation.x = -Math.PI / 2; 
+                s1.position.set(-2.25, 0.01, -i * 10 + 10);
+                this.scene.add(s1); 
+                this.stripes.push(s1);
+
+                let s2 = new THREE.Mesh(stripeGeo, stripeMat);
+                s2.rotation.x = -Math.PI / 2; 
+                s2.position.set(2.25, 0.01, -i * 10 + 10);
+                this.scene.add(s2); 
+                this.stripes.push(s2);
+            }
+            
+            // Create trees with better 3D models
+            for(let i=0; i<15; i++) { 
+                this.createTree(-15, -i * 15); 
+                this.createTree(15, -i * 15); 
+            }
+            
+            // Add distant mountains for depth
+            this.createMountains();
+        }
+
+        createTree(x, z) {
+            const group = new THREE.Group();
+            
+            // Trunk with better material
+            const trunk = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.5, 0.8, 2, 8), 
+                new THREE.MeshStandardMaterial({ 
+                    color: 0x8B4513,
+                    roughness: 0.9,
+                    metalness: 0.1
+                })
+            );
+            trunk.position.y = 1; 
+            trunk.castShadow = true;
+            
+            // Leaves with multiple layers for better 3D effect
+            const leaves1 = new THREE.Mesh(
+                new THREE.ConeGeometry(2.5, 5, 8), 
+                new THREE.MeshStandardMaterial({ 
+                    color: 0x228B22,
+                    roughness: 0.8,
+                    metalness: 0.1
+                })
+            );
+            leaves1.position.y = 3.5; 
+            leaves1.castShadow = true;
+            
+            const leaves2 = new THREE.Mesh(
+                new THREE.ConeGeometry(2, 4, 8), 
+                new THREE.MeshStandardMaterial({ 
+                    color: 0x32CD32,
+                    roughness: 0.8,
+                    metalness: 0.1
+                })
+            );
+            leaves2.position.y = 5; 
+            leaves2.castShadow = true;
+            
+            group.add(trunk); 
+            group.add(leaves1);
+            group.add(leaves2);
+            group.position.set(x, 0, z);
+            this.scene.add(group);
+            this.objects.push({ mesh: group, type: 'scenery', speedMultiplier: 1 });
+        }
+        
+        createMountains() {
+            // Create distant mountains for depth
+            for (let i = 0; i < 5; i++) {
+                const mountainGroup = new THREE.Group();
+                
+                // Main mountain
+                const mountain = new THREE.Mesh(
+                    new THREE.ConeGeometry(10 + Math.random() * 5, 15 + Math.random() * 10, 4),
+                    new THREE.MeshStandardMaterial({
+                        color: 0x556B2F,
+                        roughness: 0.9,
+                        metalness: 0.1
+                    })
+                );
+                mountain.position.y = 0;
+                mountain.rotation.y = Math.random() * Math.PI;
+                mountainGroup.add(mountain);
+                
+                // Position mountains in the distance
+                mountainGroup.position.set(
+                    -30 + Math.random() * 60,
+                    -5,
+                    -100 - Math.random() * 50
+                );
+                
+                this.scene.add(mountainGroup);
+                this.objects.push({ mesh: mountainGroup, type: 'scenery', speedMultiplier: 0.3 });
+            }
+        }
+
+        generateBhideTexture() {
+            // Generate a generic Bhide look using canvas if no image is provided
+            const cvs = document.createElement('canvas');
+            cvs.width = 256; cvs.height = 512;
+            const cx = cvs.getContext('2d');
+
+            // Transparent BG
+            cx.clearRect(0,0,256,512);
+
+            // Body (Kurta)
+            cx.fillStyle = '#FFFFF0';
+            cx.beginPath();
+            cx.moveTo(60, 200); cx.lineTo(196, 200);
+            cx.lineTo(220, 512); cx.lineTo(36, 512);
+            cx.fill();
+
+            // Vest (Sweater)
+            cx.fillStyle = '#A0522D'; // Brownish/Sienna
+            cx.fillRect(60, 200, 136, 150);
+
+            // Neck/Face
+            cx.fillStyle = '#FFCC99'; // Skin
+            cx.beginPath(); cx.arc(128, 120, 60, 0, Math.PI*2); cx.fill();
+            cx.fillRect(110, 170, 36, 40); // Neck
+
+            // Hair
+            cx.fillStyle = '#111111';
+            cx.beginPath(); cx.arc(128, 100, 60, Math.PI, 0); cx.fill(); // Top
+            cx.fillRect(68, 100, 120, 30); // Sides
+
+            // Glasses
+            cx.strokeStyle = '#333'; cx.lineWidth = 5;
+            cx.strokeRect(88, 110, 35, 20); cx.strokeRect(133, 110, 35, 20);
+            cx.beginPath(); cx.moveTo(123, 120); cx.lineTo(133, 120); cx.stroke(); // Bridge
+
+            // Mustache
+            cx.fillStyle = '#111111';
+            cx.beginPath();
+            cx.moveTo(100, 150); cx.quadraticCurveTo(128, 140, 156, 150);
+            cx.quadraticCurveTo(128, 165, 100, 150);
+            cx.fill();
+
+            // Arms/Hands holding handle (Simple circles)
+            cx.fillStyle = '#FFCC99';
+            cx.beginPath(); cx.arc(50, 300, 20, 0, Math.PI*2); cx.fill();
+            cx.beginPath(); cx.arc(206, 300, 20, 0, Math.PI*2); cx.fill();
+
+            return new THREE.CanvasTexture(cvs);
+        }
+
+        createPlayer() {
+            this.player = new THREE.Group();
+            const scooterMat = new THREE.MeshStandardMaterial({ 
+                color: 0xFFD700,
+                roughness: 0.7,
+                metalness: 0.3
+            });
+            const metalMat = new THREE.MeshStandardMaterial({ 
+                color: 0xAAAAAA,
+                roughness: 0.5,
+                metalness: 0.8
+            });
+            const seatMat = new THREE.MeshStandardMaterial({ 
+                color: 0x8B4513,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+            const tireMat = new THREE.MeshStandardMaterial({ 
+                color: 0x111111,
+                roughness: 0.9,
+                metalness: 0.1
+            });
+
+            // --- SCOOTER ---
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.0, 2.5), scooterMat);
+            body.position.y = 0.8; 
+            body.castShadow = true;
+            this.player.add(body);
+
+            const handle = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.1, 0.2), metalMat);
+            handle.position.set(0, 2.2, -1.3);
+            this.player.add(handle);
+
+            const light = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.2, 0.2, 0.2, 16), 
+                new THREE.MeshStandardMaterial({ 
+                    color: 0xFFFFFF, 
+                    emissive: 0xFFFFDD,
+                    emissiveIntensity: 0.5
+                })
+            );
+            light.rotation.x = Math.PI / 2; 
+            light.position.set(0, 2.0, -1.3);
+            this.player.add(light);
+
+            const wheelGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.3, 16);
+            wheelGeo.rotateZ(Math.PI / 2);
+            const fWheel = new THREE.Mesh(wheelGeo, tireMat); 
+            fWheel.position.set(0, 0.5, -1.2);
+            const bWheel = new THREE.Mesh(wheelGeo, tireMat); 
+            bWheel.position.set(0, 0.5, 1.0);
+            this.player.add(fWheel); 
+            this.player.add(bWheel);
+            this.player.wheels = [fWheel, bWheel];
+
+            // --- PLAYER IMAGE (SPRITE/PLANE) ---
+            let bhideTex;
+            if (BHIDE_IMAGE_URL && BHIDE_IMAGE_URL.length > 0) {
+                // Load User Image
+                const loader = new THREE.TextureLoader();
+                // Use CORS proxy or handle error if local
+                bhideTex = loader.load(BHIDE_IMAGE_URL, undefined, undefined, (err) => {
+                    console.warn("Could not load image, falling back to generated texture.");
+                });
+            } else {
+                // Generate Texture
+                bhideTex = this.generateBhideTexture();
+            }
+
+            const bhideMat = new THREE.MeshBasicMaterial({ 
+                map: bhideTex, 
+                transparent: true, 
+                side: THREE.DoubleSide,
+                alphaTest: 0.5 // Helps with transparency sorting
+            });
+            
+            // Plane that stands on the scooter
+            const bhideGeo = new THREE.PlaneGeometry(1.8, 3.6);
+            const bhideMesh = new THREE.Mesh(bhideGeo, bhideMat);
+            
+            // Position adjust: Standing on the scooter deck/seat
+            bhideMesh.position.set(0, 2.8, 0); 
+            bhideMesh.castShadow = true;
+            this.player.add(bhideMesh);
+
+            this.scene.add(this.player);
+        }
+
+        spawnObstacle() {
+            const laneIdx = Math.floor(Math.random() * 3);
+            const xPos = (laneIdx - 1) * this.laneWidth;
+            const zPos = -60;
+            let mesh;
+            const isCollectible = Math.random() < 0.4;
+
+            if (isCollectible) {
+                if (Math.random() > 0.5) {
+                    // Coin with better material
+                    const geo = new THREE.CylinderGeometry(0.8, 0.8, 0.1, 16);
+                    const mat = new THREE.MeshStandardMaterial({ 
+                        color: 0xFFD700, 
+                        emissive: 0xAA8800,
+                        emissiveIntensity: 0.3,
+                        metalness: 0.8,
+                        roughness: 0.2
+                    });
+                    mesh = new THREE.Mesh(geo, mat);
+                    mesh.rotation.x = Math.PI / 2;
+                    mesh.userData = { type: 'collectible', value: 50 };
+                } else {
+                    // Milk bottle with better material
+                    const geo = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 12);
+                    const mat = new THREE.MeshStandardMaterial({ 
+                        color: 0xFFFFFF,
+                        transparent: true,
+                        opacity: 0.8,
+                        roughness: 0.2
+                    });
+                    mesh = new THREE.Mesh(geo, mat);
+                    const lid = new THREE.Mesh(
+                        new THREE.CylinderGeometry(0.42, 0.42, 0.2, 12), 
+                        new THREE.MeshStandardMaterial({
+                            color: 0x8B0000,
+                            roughness: 0.5
+                        })
+                    );
+                    lid.position.y = 0.6; 
+                    mesh.add(lid);
+                    mesh.userData = { type: 'collectible', value: 100 };
+                }
+                mesh.position.set(xPos, 1.0, zPos);
+            } else {
+                if (Math.random() > 0.5) {
+                    // Roadblock with texture
+                    const geo = new THREE.BoxGeometry(3.5, 1.5, 0.5);
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 64; canvas.height = 64;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#FCD34D'; ctx.fillRect(0,0,64,64);
+                    ctx.fillStyle = '#000'; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(16,0); ctx.lineTo(0,16); ctx.fill();
+                    const tex = new THREE.CanvasTexture(canvas); 
+                    tex.magFilter = THREE.NearestFilter;
+                    mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ 
+                        map: tex,
+                        roughness: 0.7,
+                        metalness: 0.1
+                    }));
+                    mesh.position.set(xPos, 0.75, zPos);
+                } else {
+                    // Car with better details
+                    mesh = new THREE.Group();
+                    const body = new THREE.Mesh(
+                        new THREE.BoxGeometry(2, 1.5, 4), 
+                        new THREE.MeshStandardMaterial({ 
+                            color: 0xEF4444,
+                            roughness: 0.7,
+                            metalness: 0.2
+                        })
+                    );
+                    body.position.y = 1; 
+                    body.castShadow = true; 
+                    mesh.add(body);
+                    
+                    const cabin = new THREE.Mesh(
+                        new THREE.BoxGeometry(1.8, 0.8, 2), 
+                        new THREE.MeshStandardMaterial({ 
+                            color: 0x93C5FD,
+                            roughness: 0.5,
+                            metalness: 0.1
+                        })
+                    );
+                    cabin.position.set(0, 2, 0); 
+                    mesh.add(cabin);
+                    
+                    // Add wheels to the car
+                    const wheelGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 8);
+                    wheelGeo.rotateZ(Math.PI / 2);
+                    
+                    const flWheel = new THREE.Mesh(wheelGeo, new THREE.MeshStandardMaterial({color: 0x111111}));
+                    flWheel.position.set(-0.8, 0.3, 1.2);
+                    mesh.add(flWheel);
+                    
+                    const frWheel = new THREE.Mesh(wheelGeo, new THREE.MeshStandardMaterial({color: 0x111111}));
+                    frWheel.position.set(0.8, 0.3, 1.2);
+                    mesh.add(frWheel);
+                    
+                    const blWheel = new THREE.Mesh(wheelGeo, new THREE.MeshStandardMaterial({color: 0x111111}));
+                    blWheel.position.set(-0.8, 0.3, -1.2);
+                    mesh.add(blWheel);
+                    
+                    const brWheel = new THREE.Mesh(wheelGeo, new THREE.MeshStandardMaterial({color: 0x111111}));
+                    brWheel.position.set(0.8, 0.3, -1.2);
+                    mesh.add(brWheel);
+                    
+                    mesh.position.set(xPos, 0, zPos);
+                }
+                mesh.userData = { type: 'obstacle' };
+            }
+
+            this.scene.add(mesh);
+            this.objects.push({ mesh: mesh, type: 'game_object', lane: laneIdx });
+        }
+
+        setupInputs() {
+            document.addEventListener('keydown', (e) => {
+                if (this.isGameOver) return;
+                if (e.key === 'ArrowLeft' || e.key === 'a') this.changeLane(-1);
+                if (e.key === 'ArrowRight' || e.key === 'd') this.changeLane(1);
+            });
+
+            const btnLeft = document.getElementById('btnLeft');
+            const btnRight = document.getElementById('btnRight');
+            const soundBtn = document.getElementById('soundBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            const handleLeft = (e) => { e.preventDefault(); if (!this.isGameOver) this.changeLane(-1); };
+            const handleRight = (e) => { e.preventDefault(); if (!this.isGameOver) this.changeLane(1); };
+
+            if(btnLeft) { 
+                btnLeft.addEventListener('touchstart', handleLeft); 
+                btnLeft.addEventListener('mousedown', handleLeft); 
+            }
+            if(btnRight) { 
+                btnRight.addEventListener('touchstart', handleRight); 
+                btnRight.addEventListener('mousedown', handleRight); 
+            }
+            
+            if(soundBtn) {
+                soundBtn.addEventListener('click', () => {
+                    this.audio.toggle();
+                    this.audio.init();
+                });
+            }
+            
+            if(fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                    this.toggleFullscreen();
+                });
+            }
+        }
+
+        toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                // Enter fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                    document.documentElement.msRequestFullscreen();
+                }
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) { // Firefox
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE/Edge
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        changeLane(dir) {
+            const newLane = this.lane + dir;
+            if (newLane >= 0 && newLane <= 2) this.lane = newLane;
+        }
+
+        createExhaust() {
+            if (this.isGameOver) return;
+            const geo = new THREE.SphereGeometry(0.1 + Math.random()*0.2, 8, 8);
+            const mat = new THREE.MeshBasicMaterial({ 
+                color: 0xDDDDDD, 
+                transparent: true, 
+                opacity: 0.6 
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.copy(this.player.position);
+            mesh.position.z += 1.5; 
+            mesh.position.y += 0.5; 
+            mesh.position.x += (Math.random() - 0.5) * 0.3;
+            this.scene.add(mesh);
+            this.particles.push({ mesh: mesh, life: 1.0 });
+        }
+        
+        createScreenParticles(count) {
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.opacity = Math.random() * 0.7 + 0.3;
+                document.body.appendChild(particle);
+                
+                this.screenParticles.push({
+                    element: particle,
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    life: 1.0
+                });
+            }
+        }
+        
+        updateScreenParticles() {
+            for (let i = this.screenParticles.length - 1; i >= 0; i--) {
+                const p = this.screenParticles[i];
+                p.life -= 0.01;
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                // Bounce off edges
+                if (p.x <= 0 || p.x >= window.innerWidth) p.vx *= -1;
+                if (p.y <= 0 || p.y >= window.innerHeight) p.vy *= -1;
+                
+                p.element.style.left = p.x + 'px';
+                p.element.style.top = p.y + 'px';
+                p.element.style.opacity = p.life;
+                
+                if (p.life <= 0) {
+                    p.element.remove();
+                    this.screenParticles.splice(i, 1);
+                }
+            }
+        }
+
+        update() {
+            if (this.isGameOver) return;
+
+            this.audio.updateEnginePitch(this.gameSpeed);
+
+            // Update speed effect
+            if (this.speedEffect) {
+                this.speedEffect.style.opacity = Math.min(0.3, (this.gameSpeed - 0.5) * 0.5);
+            }
+
+            const targetX = (this.lane - 1) * this.laneWidth;
+            this.player.position.x += (targetX - this.player.position.x) * 0.1;
+            const tilt = (this.player.position.x - targetX) * 0.1;
+            this.player.rotation.z = tilt; 
+            this.player.rotation.y = -tilt * 0.5;
+            this.player.wheels.forEach(w => w.rotation.x -= this.gameSpeed);
+
+            // Animate road stripes
+            this.stripes.forEach(s => { 
+                s.position.z += this.gameSpeed; 
+                if (s.position.z > 15) s.position.z -= 200; 
+            });
+            
+            // Animate scenery
+            this.objects.forEach((obj, index) => {
+                if (obj.type === 'scenery') {
+                    obj.mesh.position.z += this.gameSpeed * obj.speedMultiplier;
+                    if (obj.mesh.position.z > 20) obj.mesh.position.z -= 300;
+                }
+            });
+
+            // Update game objects
+            for (let i = this.objects.length - 1; i >= 0; i--) {
+                const obj = this.objects[i];
+                if (obj.type !== 'game_object') continue;
+
+                obj.mesh.position.z += this.gameSpeed;
+
+                if (obj.mesh.userData.type === 'collectible') {
+                    obj.mesh.rotation.y += 0.05;
+                    // Add floating animation to collectibles
+                    obj.mesh.position.y = 1.0 + Math.sin(Date.now() * 0.005) * 0.2;
+                }
+
+                if (obj.mesh.position.z > -1.5 && obj.mesh.position.z < 1.5) {
+                    const dist = Math.abs(obj.mesh.position.x - this.player.position.x);
+                    if (dist < 1.5) this.handleCollision(obj, i);
+                }
+
+                if (obj.mesh.position.z > 10) {
+                    this.scene.remove(obj.mesh);
+                    this.objects.splice(i, 1);
+                }
+            }
+
+            // Spawn obstacles with time-based control
+            const now = Date.now();
+            if (now - this.lastSpawnTime > 1000 / (1 + this.gameSpeed * 2)) {
+                if (Math.random() < 0.5) this.spawnObstacle();
+                this.lastSpawnTime = now;
+            }
+            
+            // Create exhaust particles with time-based control
+            if (now - this.lastExhaustTime > 200 / (1 + this.gameSpeed)) {
+                this.createExhaust();
+                this.lastExhaustTime = now;
+            }
+            
+            // Update 3D particles
+            for (let i = this.particles.length - 1; i >= 0; i--) {
+                const p = this.particles[i];
+                p.life -= 0.02;
+                p.mesh.position.z += this.gameSpeed * 0.5; 
+                p.mesh.position.y += 0.02;
+                p.mesh.scale.multiplyScalar(1.05); 
+                p.mesh.material.opacity = p.life;
+                if (p.life <= 0) { 
+                    this.scene.remove(p.mesh); 
+                    this.particles.splice(i, 1); 
+                }
+            }
+            
+            // Update screen particles
+            this.updateScreenParticles();
+            
+            // Gradually increase game speed
+            this.gameSpeed += 0.0001;
+        }
+
+        handleCollision(obj, index) {
+            const type = obj.mesh.userData.type;
+            if (type === 'collectible') {
+                this.score += obj.mesh.userData.value;
+                this.scoreEl.innerText = this.score;
+                this.audio.playCollect();
+                
+                // Create collection effect
+                this.createScreenParticles(5);
+                
+                this.scene.remove(obj.mesh);
+                this.objects.splice(index, 1);
+                
+                if(Math.random() > 0.7) {
+                    const text = this.dialogues.collect[Math.floor(Math.random()*this.dialogues.collect.length)];
+                    this.audio.speak(text);
+                }
+            } else if (type === 'obstacle') {
+                this.health -= 35;
+                this.healthEl.style.width = Math.max(0, this.health) + '%';
+                this.healthEl.classList.add('bg-red-500');
+                this.audio.playCrash();
+                
+                // Create crash effect
+                this.createScreenParticles(15);
+                
+                // Camera shake
+                this.camera.position.x += (Math.random() - 0.5) * 0.5;
+                this.camera.position.y += (Math.random() - 0.5) * 0.3;
+                setTimeout(() => {
+                    this.camera.position.set(0, 5, 12);
+                }, 100);
+
+                this.scene.remove(obj.mesh);
+                this.objects.splice(index, 1);
+
+                const text = this.dialogues.crash[Math.floor(Math.random()*this.dialogues.crash.length)];
+                this.audio.speak(text);
+
+                if (this.health <= 0) this.endGame();
+                
+                setTimeout(() => this.healthEl.classList.remove('bg-red-500'), 200);
+            }
+        }
+
+        start() {
+            // Try starting audio, but proceed if it fails
+            try {
+                this.audio.init();
+                this.audio.startEngine();
+            } catch(e) { console.warn("Start Audio failed", e); }
+            
+            this.isGameOver = false;
+            if(this.startScreen) this.startScreen.classList.add('hidden');
+            if(this.gameOverScreen) this.gameOverScreen.classList.add('hidden');
+            this.score = 0;
+            this.health = 100;
+            this.gameSpeed = 0.4;
+            if(this.scoreEl) this.scoreEl.innerText = '0';
+            if(this.healthEl) this.healthEl.style.width = '100%';
+
+            this.objects.forEach(o => { if(o.type === 'game_object') this.scene.remove(o.mesh); });
+            this.objects = this.objects.filter(o => o.type !== 'game_object');
+
+            // Clear screen particles
+            this.screenParticles.forEach(p => p.element.remove());
+            this.screenParticles = [];
+
+            try {
+                const text = this.dialogues.start[Math.floor(Math.random()*this.dialogues.start.length)];
+                this.audio.speak(text);
+            } catch(e) {}
+        }
+
+        endGame() {
+            this.isGameOver = true;
+            this.audio.stopEngine();
+            if(this.gameOverScreen) this.gameOverScreen.classList.remove('hidden');
+            if(this.finalScoreEl) this.finalScoreEl.innerText = this.score;
+            
+            const text = this.dialogues.crash[Math.floor(Math.random()*this.dialogues.crash.length)];
+            const endQuote = document.getElementById('endQuote');
+            if(endQuote) endQuote.innerText = `"${text}"`;
+        }
+
+        reset() { this.start(); }
+
+        animate() {
+            requestAnimationFrame(this.animate);
+            this.update();
+            if(this.renderer && this.scene && this.camera) {
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+    }
+
+    // Ensure window.game is set globally
+    window.onload = () => {
+        window.game = new Game();
+    };
+
+</script>
+</body>
+</html>

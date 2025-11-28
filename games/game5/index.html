@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Goli's Sneaky Snack Attack 3D - Play Free TMKOC Online Game</title>
+    <meta name="description" content="Play the best online TMKOC game! Help Goli eat Jalebis without getting caught by Jethalal. A funny, 3D browser game set in the Gokuldham universe. Play for free now!">
+    
+    <meta name="keywords" content="online tmkoc game, gokuldham online games, jethalal game, goli game, taarak mehta ka ooltah chashmah game, play gokuldham games, free 3d browser games, funny indian games, jalebi eating game, casual webgl games, tap to play games, goli beta masti nahi, tmkoc 3d">
+    
+    <meta name="author" content="Gokuldham Games">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Goli's Sneaky Snack Attack 3D">
+    <meta property="og:description" content="Don't let Jethalal catch you! Help Goli eat all the Jalebis in this hilarious 3D game. Play now for free!">
+    <meta property="og:image" content="https://your-website.com/path-to-your-thumbnail.jpg"> <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Play Goli's Snack Attack - TMKOC Fan Game">
+    <meta name="twitter:description" content="Test your reflexes! Eat the Jalebis before Jethalal looks up from his newspaper.">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Carter+One&family=Fredoka+One&display=swap');
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            font-family: 'Fredoka One', cursive;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #game-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* UI Overlay Layer */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* HUD */
+        .hud-top {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .bar-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 15px;
+            border: 3px solid #FFF;
+            width: 300px;
+            max-width: 50vw;
+        }
+
+        .hunger-label {
+            color: #FFF;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #FFC107, #FF5722);
+            transition: width 0.1s linear;
+        }
+
+        .level-badge {
+            background: #FF5722;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 3px solid #FFF;
+            font-size: 1.5rem;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 0 #bf360c;
+        }
+
+        .controls-top-right {
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+        }
+
+        .icon-btn {
+            background: #FFF;
+            border: 3px solid #000;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #999;
+            transition: transform 0.1s;
+        }
+
+        .icon-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #999;
+        }
+
+        /* Action Button */
+        .controls-bottom {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        #eatBtn {
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle at 30% 30%, #FFAB91, #D84315);
+            border: 6px solid #FFF;
+            border-radius: 50%;
+            box-shadow: 0 10px 0 #870000, 0 20px 30px rgba(0,0,0,0.4);
+            color: white;
+            font-size: 2rem;
+            font-family: 'Carter One', cursive;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 2px 2px 0 #bf360c;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #eatBtn:active {
+            transform: scale(0.95) translateY(10px);
+            box-shadow: 0 0 0 #870000, 0 10px 10px rgba(0,0,0,0.4);
+            background: #BF360C;
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            position: absolute;
+            background: #FFF;
+            color: #000;
+            padding: 15px 25px;
+            border-radius: 20px;
+            border: 4px solid #000;
+            font-size: 1.5rem;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+            white-space: nowrap;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.2);
+        }
+        
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 15px 15px 0;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+        }
+
+        /* Screens */
+        .screen-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            pointer-events: auto;
+        }
+
+        .title-3d {
+            font-family: 'Carter One', cursive;
+            font-size: 4rem;
+            text-align: center;
+            color: #FFD700;
+            text-shadow: 5px 5px 0 #D32F2F, 10px 10px 0 #000;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .menu-btn {
+            background: #4CAF50;
+            color: white;
+            font-size: 2rem;
+            padding: 15px 50px;
+            border: 4px solid #FFF;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #2E7D32, 0 15px 20px rgba(0,0,0,0.3);
+            font-family: 'Fredoka One', cursive;
+            transition: transform 0.1s;
+        }
+
+        .menu-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 0 0 #2E7D32, 0 5px 10px rgba(0,0,0,0.3);
+        }
+
+        .hidden { display: none !important; }
+
+        .tutorial-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Container -->
+    <div id="game-container"></div>
+
+    <!-- UI -->
+    <div id="ui-layer">
+        
+        <!-- Top HUD -->
+        <div class="hud-top">
+            <div class="bar-container">
+                <div class="hunger-label">Stomach Fill: <span id="scoreVal">0</span>%</div>
+                <div class="progress-track">
+                    <div id="hungerBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="controls-top-right">
+                <div class="level-badge" id="levelBadge">Lvl 1</div>
+                <button id="fsBtn" class="icon-btn" title="Fullscreen">⛶</button>
+                <button id="exitBtn" class="icon-btn text-red-500" title="Exit">✖</button>
+            </div>
+        </div>
+
+        <!-- Speech Bubble -->
+        <div id="jethaSpeech" class="speech-bubble">Nonsense!</div>
+
+        <!-- Bottom Controls -->
+        <div class="controls-bottom">
+            <button id="eatBtn">EAT!</button>
+            <p class="text-white mt-4 font-bold text-shadow-md opacity-80">Hold to Eat / Release to Stop</p>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="screen-overlay">
+        <h1 class="title-3d">Goli's<br>Snack Attack 3D</h1>
+        
+        <div class="tutorial-box">
+            <h3 class="text-yellow-400 text-xl mb-2">How to Play:</h3>
+            <p class="mb-2">1. You are <strong>Goli</strong>. You are hungry.</p>
+            <p class="mb-2">2. Hold the <strong>EAT</strong> button to grab Jalebis.</p>
+            <p class="mb-2">3. Watch <strong>Jethalal</strong> closely!</p>
+            <p class="mb-2 text-red-400">4. If he lowers the newspaper or says "Nonsense!", STOP immediately!</p>
+        </div>
+
+        <button id="playBtn" class="menu-btn">Start Game</button>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="screen-overlay hidden">
+        <h1 class="title-3d text-red-500" style="text-shadow: 5px 5px 0 #FFF;">CAUGHT!</h1>
+        <p class="text-2xl mb-8">Jethalal saw you eating!</p>
+        <button id="retryBtn" class="menu-btn bg-orange-500">Try Again</button>
+    </div>
+
+    <script>
+        /**
+         * ------------------------------------------------------------------
+         * THREE.JS GAME ENGINE
+         * ------------------------------------------------------------------
+         */
+
+        // --- GLOBAL VARIABLES ---
+        let scene, camera, renderer;
+        let animationId;
+        let lastTime = 0;
+        
+        // Game State
+        const STATE = {
+            MENU: 0,
+            PLAYING: 1,
+            GAMEOVER: 2
+        };
+        let currentState = STATE.MENU;
+        
+        // Gameplay Vars
+        let stomachFill = 0;
+        let level = 1;
+        let isEating = false;
+        
+        // Jethalal Logic
+        // 0: Reading (Safe), 1: Suspicious (Warning), 2: Looking (Deadly)
+        let jethaState = 0;
+        let nextStateTime = 0;
+        let reactionTime = 0;
+
+        // Models
+        const models = {
+            jetha: { group: null, head: null, armL: null, armR: null, paper: null },
+            goli: { group: null, armL: null, armR: null },
+            props: { plate: null, jalebis: [] }
+        };
+
+        // Particles
+        let particles = [];
+
+        // Audio
+        const synth = window.speechSynthesis;
+
+        // --- INITIALIZATION ---
+        function init() {
+            // Scene Setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB); // Sky blue
+            scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
+
+            // Camera (First Person / Over Shoulder)
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 12, 18); // Behind Goli
+            camera.lookAt(0, 5, 0); // Look at Jethalal
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('game-container').appendChild(renderer.domElement);
+
+            // Lighting
+            setupLighting();
+
+            // Environment
+            createRoom();
+            createTable();
+
+            // Characters
+            createJethalal();
+            createGoli();
+
+            // Listeners
+            window.addEventListener('resize', onWindowResize, false);
+            setupInput();
+            setupUI();
+
+            // Start Loop
+            requestAnimationFrame(gameLoop);
+        }
+
+        function setupLighting() {
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(10, 20, 10);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 2048;
+            dirLight.shadow.mapSize.height = 2048;
+            scene.add(dirLight);
+        }
+
+        // --- ASSET GENERATION (ROBLOX STYLE VOXELS) ---
+
+        // Helper to create box mesh
+        function createBox(w, h, d, color, x, y, z, parent, castShadow=true) {
+            const geom = new THREE.BoxGeometry(w, h, d);
+            const mat = new THREE.MeshToonMaterial({ color: color });
+            const mesh = new THREE.Mesh(geom, mat);
+            mesh.position.set(x, y, z);
+            mesh.castShadow = castShadow;
+            mesh.receiveShadow = true;
+            if (parent) parent.add(mesh);
+            return mesh;
+        }
+
+        function createRoom() {
+            // Floor
+            createBox(100, 1, 100, 0x8D6E63, 0, -0.5, 0, scene);
+            // Walls (Back)
+            createBox(100, 50, 2, 0xFFE0B2, 0, 25, -20, scene);
+        }
+
+        function createTable() {
+            const group = new THREE.Group();
+            
+            // Top
+            createBox(16, 1, 10, 0x5D4037, 0, 4, 0, group);
+            // Legs
+            const legColor = 0x3E2723;
+            createBox(1, 4, 1, legColor, -7, 2, -4, group);
+            createBox(1, 4, 1, legColor, 7, 2, -4, group);
+            createBox(1, 4, 1, legColor, -7, 2, 4, group);
+            createBox(1, 4, 1, legColor, 7, 2, 4, group);
+
+            // Plate
+            const plateGeom = new THREE.CylinderGeometry(3, 2.5, 0.5, 32);
+            const plateMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
+            const plate = new THREE.Mesh(plateGeom, plateMat);
+            plate.position.set(0, 4.8, 0);
+            plate.receiveShadow = true;
+            group.add(plate);
+            models.props.plate = plate;
+
+            // Jalebis (Torus Knots/Rings)
+            for(let i=0; i<8; i++) {
+                const jGeom = new THREE.TorusGeometry(0.6, 0.15, 8, 16);
+                const jMat = new THREE.MeshToonMaterial({ color: 0xFFA000 }); // Orange
+                const jalebi = new THREE.Mesh(jGeom, jMat);
+                jalebi.rotation.x = Math.PI / 2;
+                jalebi.rotation.z = Math.random() * Math.PI;
+                jalebi.position.set((Math.random()-0.5)*2, 5.1 + (i*0.2), (Math.random()-0.5)*2);
+                group.add(jalebi);
+                models.props.jalebis.push(jalebi);
+            }
+
+            scene.add(group);
+        }
+
+        function createJethalal() {
+            const group = new THREE.Group();
+            group.position.set(0, 0, -8); // Opposite side of table
+            
+            // Chair
+            createBox(6, 6, 6, 0x4E342E, 0, 3, -2, group);
+            createBox(6, 10, 1, 0x4E342E, 0, 8, -5, group);
+
+            // Body (Orange Shirt)
+            const torso = createBox(5, 7, 3, 0xFF7043, 0, 8, 0, group);
+            // Collar
+            createBox(5.2, 1, 3.2, 0xD84315, 0, 11, 0, group);
+
+            // Head (Pivot Group)
+            const headGroup = new THREE.Group();
+            headGroup.position.set(0, 12, 0);
+            group.add(headGroup);
+            models.jetha.head = headGroup;
+
+            // Face
+            createBox(4, 5, 4, 0xFFCC80, 0, 2.5, 0, headGroup);
+            // Hair
+            createBox(4.2, 1.5, 4.2, 0x000000, 0, 5, 0, headGroup); // Top
+            createBox(4.2, 3, 1, 0x000000, 0, 3, -2, headGroup); // Back
+            createBox(0.5, 2, 1, 0x000000, 2, 3, 0, headGroup); // Sideburn
+            createBox(0.5, 2, 1, 0x000000, -2, 3, 0, headGroup); // Sideburn
+
+            // Mustache
+            createBox(2.5, 0.5, 0.2, 0x000000, 0, 1.5, 2.1, headGroup);
+
+            // Arms
+            const armL = createBox(1.5, 6, 1.5, 0xFF7043, -3.5, 9, 1, group);
+            const armR = createBox(1.5, 6, 1.5, 0xFF7043, 3.5, 9, 1, group);
+            
+            // Hands
+            createBox(1.5, 1.5, 1.5, 0xFFCC80, 0, -3.5, 0, armL);
+            createBox(1.5, 1.5, 1.5, 0xFFCC80, 0, -3.5, 0, armR);
+
+            armL.rotation.x = -Math.PI / 2.5; // Holding paper
+            armR.rotation.x = -Math.PI / 2.5;
+
+            // Newspaper Group
+            const paperGroup = new THREE.Group();
+            paperGroup.position.set(0, 8, 3.5);
+            group.add(paperGroup);
+            models.jetha.paper = paperGroup;
+
+            // Newspaper Mesh
+            const paperGeo = new THREE.BoxGeometry(10, 8, 0.2);
+            const paperMat = new THREE.MeshStandardMaterial({ map: createNewspaperTexture() });
+            const paper = new THREE.Mesh(paperGeo, paperMat);
+            paperGroup.add(paper);
+
+            scene.add(group);
+            models.jetha.group = group;
+        }
+
+        function createNewspaperTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#EEEEEE';
+            ctx.fillRect(0,0,256,256);
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 30px Arial';
+            ctx.fillText("GOKULDHAM", 30, 50);
+            ctx.fillRect(20, 70, 216, 10);
+            ctx.fillRect(20, 90, 216, 10);
+            ctx.fillRect(20, 110, 150, 10);
+            
+            // Image placeholder
+            ctx.fillStyle = '#999';
+            ctx.fillRect(150, 130, 80, 80);
+            
+            const tex = new THREE.CanvasTexture(canvas);
+            return tex;
+        }
+
+        function createGoli() {
+            const group = new THREE.Group();
+            group.position.set(0, 0, 10); // Player side
+            
+            // Just Arms visible
+            const armGroupL = new THREE.Group();
+            armGroupL.position.set(-2, 5, 0);
+            const armL = createBox(1.5, 6, 1.5, 0xFF7043, 0, 0, 0, armGroupL); // Orange Shirt
+            armL.rotation.x = Math.PI / 2;
+            const handL = createBox(1.6, 2, 1.8, 0xF5D0A9, 0, 4, 0, armL); // Hand
+            group.add(armGroupL);
+            models.goli.armL = armGroupL;
+
+            const armGroupR = new THREE.Group();
+            armGroupR.position.set(2, 5, 0);
+            const armR = createBox(1.5, 6, 1.5, 0xFF7043, 0, 0, 0, armGroupR); 
+            armR.rotation.x = Math.PI / 2;
+            const handR = createBox(1.6, 2, 1.8, 0xF5D0A9, 0, 4, 0, armR);
+            group.add(armGroupR);
+            models.goli.armR = armGroupR;
+
+            scene.add(group);
+            models.goli.group = group;
+        }
+
+        function createCrumb(x, y, z) {
+            const size = Math.random() * 0.2 + 0.1;
+            const geom = new THREE.BoxGeometry(size, size, size);
+            const mat = new THREE.MeshBasicMaterial({ color: 0xFFA000 });
+            const mesh = new THREE.Mesh(geom, mat);
+            mesh.position.set(x, y, z);
+            
+            // Physics props
+            mesh.userData.vel = new THREE.Vector3(
+                (Math.random() - 0.5) * 0.5,
+                Math.random() * 0.5,
+                (Math.random() - 0.5) * 0.5
+            );
+            
+            scene.add(mesh);
+            particles.push(mesh);
+        }
+
+        // --- GAME LOGIC ---
+
+        function setupInput() {
+            const btn = document.getElementById('eatBtn');
+            
+            const start = (e) => {
+                e.preventDefault();
+                if (currentState === STATE.PLAYING) isEating = true;
+                btn.style.transform = "scale(0.9)";
+            };
+            const end = (e) => {
+                e.preventDefault();
+                isEating = false;
+                btn.style.transform = "scale(1)";
+                // Reset Goli Arms
+                if(models.goli.armL) {
+                    models.goli.armL.rotation.x = 0;
+                    models.goli.armR.rotation.x = 0;
+                }
+            };
+
+            btn.addEventListener('mousedown', start);
+            btn.addEventListener('touchstart', start, {passive: false});
+            window.addEventListener('mouseup', end);
+            window.addEventListener('touchend', end);
+        }
+
+        function setupUI() {
+            document.getElementById('playBtn').addEventListener('click', startGame);
+            document.getElementById('retryBtn').addEventListener('click', startGame);
+            document.getElementById('exitBtn').addEventListener('click', exitGame);
+            document.getElementById('fsBtn').addEventListener('click', toggleFullScreen);
+        }
+
+        function startGame() {
+            currentState = STATE.PLAYING;
+            stomachFill = 0;
+            level = 1;
+            jethaState = 0;
+            isEating = false;
+            particles.forEach(p => scene.remove(p));
+            particles = [];
+
+            // UI Reset
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            document.getElementById('eatBtn').style.display = 'flex';
+            updateUI();
+            
+            speak("Goli beta, masti nahi!");
+            scheduleNextState();
+        }
+
+        function exitGame() {
+            currentState = STATE.MENU;
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+
+        function scheduleNextState() {
+            if (currentState !== STATE.PLAYING) return;
+            
+            // Time depends on level (harder = faster switches)
+            const safeTime = Math.max(1000, 3000 - (level * 200));
+            nextStateTime = performance.now() + safeTime + Math.random() * 2000;
+        }
+
+        function speak(text) {
+            if (synth.speaking) synth.cancel();
+            
+            // Show bubble
+            const bubble = document.getElementById('jethaSpeech');
+            bubble.innerText = text;
+            bubble.style.transform = "translateX(-50%) scale(1)";
+            
+            setTimeout(() => {
+                bubble.style.transform = "translateX(-50%) scale(0)";
+            }, 2000);
+
+            // Audio
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = 1.1;
+            u.pitch = 0.8;
+            synth.speak(u);
+        }
+
+        function gameOver() {
+            currentState = STATE.GAMEOVER;
+            speak("Catch you! Bapuji ko bulata hoon!");
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('eatBtn').style.display = 'none';
+        }
+
+        function updateGame(time) {
+            // --- JETHALAL AI ---
+            if (jethaState === 0) {
+                // READING
+                // Lerp paper up
+                models.jetha.paper.rotation.x = THREE.MathUtils.lerp(models.jetha.paper.rotation.x, 0, 0.1);
+                models.jetha.head.rotation.y = THREE.MathUtils.lerp(models.jetha.head.rotation.y, 0, 0.1);
+
+                if (time > nextStateTime) {
+                    jethaState = 1;
+                    speak(Math.random() > 0.5 ? "Hmph?" : "Kaun hai?");
+                    nextStateTime = time + 1500; // Warning duration
+                }
+            } 
+            else if (jethaState === 1) {
+                // SUSPICIOUS (Warning)
+                // Shake paper
+                models.jetha.paper.rotation.z = Math.sin(time * 0.02) * 0.1;
+                
+                if (time > nextStateTime) {
+                    jethaState = 2; // LOOK
+                    speak("Nonsense!");
+                    nextStateTime = time + (Math.random() * 2000 + 1000); // Look duration
+                }
+            }
+            else if (jethaState === 2) {
+                // LOOKING
+                // Lerp paper down
+                models.jetha.paper.rotation.x = THREE.MathUtils.lerp(models.jetha.paper.rotation.x, Math.PI / 2.5, 0.2);
+                
+                // Head track player logic (simplified)
+                models.jetha.head.rotation.y = Math.sin(time * 0.005) * 0.2;
+
+                // CHECK CATCH
+                // If paper is mostly down (> 1.0 rad) AND user is eating
+                if (models.jetha.paper.rotation.x > 1.0 && isEating) {
+                    gameOver();
+                }
+
+                if (time > nextStateTime) {
+                    jethaState = 0; // Back to reading
+                    scheduleNextState();
+                }
+            }
+
+            // --- GOLI ACTIONS ---
+            if (isEating && currentState === STATE.PLAYING) {
+                stomachFill += (0.2 + (level * 0.05));
+                if (stomachFill >= 100) {
+                    level++;
+                    stomachFill = 0;
+                    speak("Hey Maa Mataji! Next Level!");
+                }
+                updateUI();
+
+                // Animation
+                const armAngle = -Math.PI / 4 + Math.sin(time * 0.02) * 0.5;
+                models.goli.armL.rotation.x = armAngle;
+                models.goli.armR.rotation.x = armAngle;
+
+                // Spawn Particles
+                if (Math.random() > 0.7) {
+                    createCrumb(
+                        (Math.random()-0.5)*2, 
+                        5.5, 
+                        (Math.random()-0.5)*2
+                    );
+                }
+            } else {
+                // Retract Arms
+                 models.goli.armL.rotation.x = THREE.MathUtils.lerp(models.goli.armL.rotation.x, 0, 0.2);
+                 models.goli.armR.rotation.x = THREE.MathUtils.lerp(models.goli.armR.rotation.x, 0, 0.2);
+            }
+
+            // --- PHYSICS PARTICLES ---
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.position.add(p.userData.vel);
+                p.userData.vel.y -= 0.02; // Gravity
+                p.rotation.x += 0.1;
+                p.scale.multiplyScalar(0.95); // Shrink
+                
+                if (p.position.y < 0 || p.scale.x < 0.01) {
+                    scene.remove(p);
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // Jalebi Float Animation
+            models.props.jalebis.forEach((j, idx) => {
+                j.position.y = 5.1 + (idx*0.2) + Math.sin(time * 0.005 + idx) * 0.1;
+            });
+        }
+
+        function updateUI() {
+            const bar = document.getElementById('hungerBar');
+            bar.style.width = Math.min(stomachFill, 100) + '%';
+            document.getElementById('scoreVal').innerText = Math.floor(stomachFill);
+            document.getElementById('levelBadge').innerText = "Lvl " + level;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function gameLoop(time) {
+            requestAnimationFrame(gameLoop);
+            
+            const dt = time - lastTime;
+            lastTime = time;
+
+            if (currentState !== STATE.MENU) {
+                updateGame(time);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+
+    </script>
+</body>
+</html>
